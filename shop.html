@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>龍園 - 告別式典雅蘭花線上訂購與追蹤</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col antialiased">
+
+  <!-- Navigation Bar (買家版：無商家後台按鈕) -->
+  <header class="bg-slate-900/90 backdrop-blur-md border-b border-amber-900/30 sticky top-0 z-40 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('shop')">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-600 to-amber-900 flex items-center justify-center text-amber-100 shadow-md border border-amber-500/30">
+          <i class="fa-solid fa-seedling text-lg"></i>
+        </div>
+        <div>
+          <span class="font-serif text-2xl font-bold tracking-wider text-gradient-gold block leading-none">龍園</span>
+          <span class="text-[10px] tracking-widest text-slate-400 block mt-1 uppercase">Funeral Orchid Order System</span>
+        </div>
+      </div>
+
+      <!-- Nav Tabs -->
+      <nav class="flex items-center space-x-2 sm:space-x-4">
+        <button id="nav-shop" onclick="switchTab('shop')" class="nav-btn active px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-sm font-medium transition flex items-center gap-2">
+          <i class="fa-solid fa-store"></i> <span>蘭花訂購</span>
+        </button>
+        <button id="nav-track" onclick="switchTab('track')" class="nav-btn px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 relative">
+          <i class="fa-solid fa-magnifying-glass"></i> <span>訂單查詢</span>
+        </button>
+        <button onclick="openInfoModal()" class="nav-btn px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 text-slate-300 hover:text-amber-300">
+          <i class="fa-solid fa-circle-info"></i> <span>商家資訊</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- VIEW 1: SHOPPING & ORDER FORM -->
+    <section id="view-shop" class="space-y-12">
+      <!-- Banner -->
+      <div class="relative rounded-2xl overflow-hidden border border-slate-800 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 p-8 sm:p-12 text-center shadow-2xl">
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#d97706_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        <div class="relative z-10 max-w-2xl mx-auto space-y-4">
+          <div class="inline-block px-3 py-1 rounded-full bg-amber-950/60 border border-amber-600/30 text-amber-300 text-xs tracking-widest uppercase mb-1">
+            謹悼懷思 ‧ 莊重獻禮
+          </div>
+          <h1 class="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-100 tracking-tight">
+            告別式典雅蘭花花籃
+          </h1>
+          <p class="text-slate-400 text-sm sm:text-base font-light leading-relaxed">
+            嚴選高雅蝴蝶蘭，傳遞深切悼念與無盡思念。線上輕鬆訂購，由專人親送到場佈置並拍照回傳。
+          </p>
+        </div>
+      </div>
+
+      <!-- Products Grid -->
+      <div>
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="font-serif text-2xl font-bold text-slate-200 flex items-center gap-2">
+            <i class="fa-solid fa-flower-tulip text-amber-500"></i> 蘭花款式選擇
+          </h2>
+          <span class="text-xs text-slate-400">請選擇一款蘭花商品以進行訂購</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="product-list">
+          <!-- Products injected via JS -->
+        </div>
+      </div>
+
+      <!-- Order Form Section -->
+      <div id="order-form-container" class="bg-slate-800/80 rounded-2xl border border-slate-700 p-6 sm:p-10 shadow-xl backdrop-blur-sm transition-all duration-300">
+        <div class="border-b border-slate-700/80 pb-5 mb-8 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="font-serif text-2xl font-bold text-amber-400 flex items-center gap-2">
+              <i class="fa-solid fa-file-signature"></i> 填寫訂購人與告別式資料
+            </h2>
+            <p class="text-xs text-slate-400 mt-1">請仔細核對以下資料，確保佈置作業順利進行</p>
+          </div>
+          <div id="selected-product-badge" class="bg-amber-950/80 border border-amber-600/40 text-amber-200 px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2">
+            <i class="fa-solid fa-check-circle text-amber-500"></i>
+            <span>已選擇：<strong id="selected-product-name" class="text-white">請先選擇商品</strong></span>
+          </div>
+        </div>
+
+        <form id="order-form" onsubmit="handleOrderSubmit(event)" class="space-y-8">
+          <input type="hidden" id="form-product-id" required>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- 訂購人姓名 -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-slate-300">
+                訂購人姓名 <span class="text-rose-500">*</span>
+              </label>
+              <div class="relative">
+                <i class="fa-solid fa-user absolute left-3.5 top-3.5 text-slate-500 text-sm"></i>
+                <input type="text" id="cust-name" required placeholder="請輸入姓名"
+                  class="w-full pl-10 pr-4 py-2.5 bg-slate-900/90 border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-sm transition">
+              </div>
+            </div>
+
+            <!-- 電話 -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-slate-300">
+                電話 <span class="text-rose-500">*</span>
+              </label>
+              <div class="relative">
+                <i class="fa-solid fa-phone absolute left-3.5 top-3.5 text-slate-500 text-sm"></i>
+                <input type="tel" id="cust-phone" required placeholder="例如：0912345678"
+                  class="w-full pl-10 pr-4 py-2.5 bg-slate-900/90 border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-sm transition">
+              </div>
+            </div>
+
+            <!-- 地址 -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-slate-300">
+                訂購人地址 <span class="text-rose-500">*</span>
+              </label>
+              <div class="relative">
+                <i class="fa-solid fa-location-dot absolute left-3.5 top-3.5 text-slate-500 text-sm"></i>
+                <input type="text" id="cust-address" required placeholder="請輸入完整地址"
+                  class="w-full pl-10 pr-4 py-2.5 bg-slate-900/90 border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-sm transition">
+              </div>
+            </div>
+
+            <!-- 信箱 -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-slate-300">
+                電子信箱 <span class="text-rose-500">*</span>
+              </label>
+              <div class="relative">
+                <i class="fa-solid fa-envelope absolute left-3.5 top-3.5 text-slate-500 text-sm"></i>
+                <input type="email" id="cust-email" required placeholder="name@example.com"
+                  class="w-full pl-10 pr-4 py-2.5 bg-slate-900/90 border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-sm transition">
+              </div>
+            </div>
+
+            <!-- 出殯日期 -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-slate-300">
+                出殯日期 <span class="text-rose-500">*</span>
+              </label>
+              <div class="space-y-2">
+                <select id="select-date-option" onchange="handleCaseSelection('date')"
+                  class="w-full px-4 py-2.5 bg-slate-900/90 border border-slate-700 rounded-lg text-slate-100 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-sm transition">
+                </select>
+                <div id="custom-date-container" class="hidden">
+                  <input type="date" id="cust-date-custom"
+                    class="w-full px-4 py-2 bg-slate-900 border border-slate-600 rounded-lg text-slate-100 focus:outline-none focus:border-amber-500 text-sm">
+                </div>
+              </div>
+            </div>
+
+            <!-- 亡者姓名 -->
+            <div class="space-y-2">
+              <label class="block text-sm font-medium text-slate-300">
+                亡者姓名 (受悼者) <span class="text-rose-500">*</span>
+              </label>
+              <div class="space-y-2">
+                <select id="select-deceased-option" onchange="handleCaseSelection('deceased')"
+                  class="w-full px-4 py-2.5 bg-slate-900/90 border border-slate-700 rounded-lg text-slate-100 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 text-sm transition">
+                </select>
+                <div id="custom-deceased-container" class="hidden">
+                  <input type="text" id="cust-deceased-custom" placeholder="請填寫亡者姓名（例如：故 某某某 先生/女士）"
+                    class="w-full px-4 py-2 bg-slate-900 border border-slate-600 rounded-lg text-slate-100 focus:outline-none focus:border-amber-500 text-sm">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 訃聞圖檔區 -->
+          <div class="space-y-2 border-t border-slate-700/60 pt-6">
+            <!-- 情況 A: 選擇「其他」時顯示上傳框 -->
+            <div id="obituary-upload-section" class="space-y-2">
+              <label class="block text-sm font-medium text-slate-300">
+                上傳訃聞圖檔 <span class="text-slate-400 text-xs font-normal">(選填，方便商家確認文字挽聯細節)</span>
+              </label>
+              <div class="flex flex-col sm:flex-row items-center gap-4">
+                <label class="w-full sm:w-auto flex-1 cursor-pointer flex flex-col items-center justify-center p-4 border-2 border-dashed border-slate-600 hover:border-amber-500/70 rounded-xl bg-slate-900/50 hover:bg-slate-900 transition text-center group">
+                  <i class="fa-solid fa-cloud-arrow-up text-2xl text-slate-400 group-hover:text-amber-400 mb-2 transition"></i>
+                  <span class="text-sm text-slate-300 group-hover:text-amber-200">點擊上傳訃聞照片 (JPG, PNG)</span>
+                  <span class="text-xs text-slate-500 mt-1">或拖曳檔案至此</span>
+                  <input type="file" id="obituary-file" accept="image/*" onchange="previewObituaryImage(event)" class="hidden">
+                </label>
+                <div id="obituary-preview-box" class="hidden w-28 h-28 relative rounded-lg overflow-hidden border border-amber-500/50 flex-shrink-0 bg-slate-950">
+                  <img id="obituary-preview-img" src="" class="w-full h-full object-cover">
+                  <button type="button" onclick="removeObituaryPreview()" class="absolute top-1 right-1 bg-rose-600/80 hover:bg-rose-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs">
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 情況 B: 選擇「商家已建檔案件」時顯示預設訃聞進行二次確認 -->
+            <div id="obituary-preset-section" class="hidden space-y-3 bg-slate-900/90 p-4 rounded-xl border border-amber-500/40">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+                  <i class="fa-solid fa-shield-check"></i> 商家預設訃聞圖檔 (請訂購者二次確認)
+                </span>
+                <span class="text-[11px] text-slate-400">若有疑問可聯繫商家確認</span>
+              </div>
+              <div class="relative h-48 w-full rounded-lg overflow-hidden border border-slate-700 bg-black cursor-pointer group" onclick="openPresetObituaryModal()">
+                <img id="obituary-preset-img" src="" class="w-full h-full object-contain group-hover:scale-105 transition duration-300">
+                <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-xs text-white">
+                  <i class="fa-solid fa-magnifying-glass-plus text-lg mr-1"></i> 點擊放大查看訃聞全文
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 收據需求 -->
+          <div class="space-y-3 border-t border-slate-700/60 pt-6">
+            <label class="block text-sm font-medium text-slate-300">
+              是否需要收據？ <span class="text-rose-500">*</span>
+            </label>
+            <div class="flex items-center gap-6">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="need-receipt" value="是" class="w-4 h-4 text-amber-600 bg-slate-900 border-slate-700 focus:ring-amber-500">
+                <span class="text-sm text-slate-200">需要收據</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" name="need-receipt" value="否" checked class="w-4 h-4 text-amber-600 bg-slate-900 border-slate-700 focus:ring-amber-500">
+                <span class="text-sm text-slate-200">不需要收據</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- 服務與佈置條款 -->
+          <div class="rounded-lg bg-amber-950/30 border border-amber-800/40 p-4 text-xs text-amber-200/90 leading-relaxed flex items-start gap-3">
+            <i class="fa-solid fa-circle-info text-amber-500 text-base mt-0.5 flex-shrink-0"></i>
+            <div>
+              <p class="font-bold text-amber-300 mb-0.5">服務與佈置說明條款：</p>
+              <ul class="list-disc list-inside space-y-0.5 text-amber-200/80">
+                <li>告別式花籃統一佈置。</li>
+                <li>龍園僅負責代訂服務。</li>
+                <li>花樣僅佈置花店提供的款式，圖片僅供參考，實際花材以花店提供為準。</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="pt-4">
+            <button type="submit" class="w-full py-4 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-bold text-lg rounded-xl shadow-lg hover:shadow-amber-600/20 transition duration-200 flex items-center justify-center gap-2">
+              <i class="fa-solid fa-paper-plane"></i>
+              <span>確認送出訂單</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- VIEW 2: ORDER TRACKING -->
+    <section id="view-track" class="hidden space-y-8">
+      <div class="max-w-3xl mx-auto">
+        <div class="text-center space-y-3 mb-8">
+          <h1 class="font-serif text-3xl font-bold text-amber-400">訂單進度與佈置照片查詢</h1>
+          <p class="text-slate-400 text-sm">請輸入您的「訂單編號」或「訂購人手機號碼」即可即時查詢狀態與現場佈置完成照片。</p>
+        </div>
+
+        <!-- Search Box -->
+        <div class="bg-slate-800/90 p-4 rounded-xl border border-slate-700 flex flex-col sm:flex-row gap-3 shadow-lg">
+          <div class="relative flex-1">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-500"></i>
+            <input type="text" id="track-search-input" placeholder="輸入訂單編號 (例: LY-...) 或手機號碼"
+              class="w-full pl-10 pr-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500">
+          </div>
+          <button onclick="searchOrders()" class="px-6 py-2.5 bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold rounded-lg transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-search"></i> 查詢訂單
+          </button>
+        </div>
+
+        <!-- Results List -->
+        <div id="track-results-container" class="mt-8 space-y-6">
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-auto border-t border-slate-800 bg-slate-950 py-8 text-slate-400 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+      <div class="text-center space-y-2">
+        <h4 class="font-bold text-amber-400 text-sm">龍園 - 服務特別聲明</h4>
+        <p class="text-slate-400">告別式花籃統一佈置 ‧ 該公司僅負責代訂服務 ‧ 花樣僅佈置花店提供的款式</p>
+      </div>
+      <div class="text-center text-slate-500 pt-2 border-t border-slate-900">
+        © <span id="current-year"></span> 龍園殯儀用品社. All Rights Reserved.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal: Merchant Info -->
+  <div id="info-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-800 border border-amber-600/50 rounded-2xl p-6 max-w-md w-full space-y-5 shadow-2xl relative">
+      <button onclick="closeInfoModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+      <div class="flex items-center gap-3 border-b border-slate-700 pb-3">
+        <div class="w-10 h-10 rounded-full bg-amber-950 border border-amber-500/50 text-amber-400 flex items-center justify-center font-bold">
+          <i class="fa-solid fa-store"></i>
+        </div>
+        <div>
+          <h3 class="font-serif font-bold text-amber-400 text-lg">龍園殯儀用品社</h3>
+          <p class="text-xs text-slate-400">商家服務與聯絡資訊</p>
+        </div>
+      </div>
+      <div class="space-y-3 text-sm text-slate-200">
+        <div class="flex items-start gap-3">
+          <i class="fa-solid fa-phone text-amber-500 mt-1"></i>
+          <div>
+            <span class="text-xs text-slate-400 block">電話：</span>
+            <a href="tel:02-24650368" class="font-bold text-slate-100 hover:text-amber-300">02-24650368</a>
+          </div>
+        </div>
+        <div class="flex items-start gap-3">
+          <i class="fa-solid fa-location-dot text-amber-500 mt-1"></i>
+          <div>
+            <span class="text-xs text-slate-400 block">門市地址：</span>
+            <span>基隆市信義區東明路10號一樓</span>
+          </div>
+        </div>
+      </div>
+      <button onclick="closeInfoModal()" class="w-full py-2 bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold rounded-lg text-xs transition">關閉資訊</button>
+    </div>
+  </div>
+
+  <!-- Modal: Image Viewer -->
+  <div id="image-modal" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
+    <button onclick="closeImageModal()" class="absolute top-4 right-4 text-white text-3xl hover:text-amber-400 transition">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div class="max-w-4xl max-h-[90vh] flex flex-col items-center">
+      <img id="modal-img" src="" class="max-w-full max-h-[80vh] object-contain rounded-lg border border-slate-700 shadow-2xl">
+      <p id="modal-caption" class="text-slate-300 text-sm mt-3 text-center font-serif"></p>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 hidden bg-slate-800 text-slate-100 border border-amber-500/50 px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 transition-all duration-300">
+    <i id="toast-icon" class="fa-solid fa-circle-check text-amber-400 text-lg"></i>
+    <span id="toast-message" class="text-sm font-medium">提示訊息</span>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
