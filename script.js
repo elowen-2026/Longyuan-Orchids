@@ -1,5 +1,5 @@
-// 後台管理密碼
-const ADMIN_PASSWORD = "8888"; 
+// 商家後台新密碼
+const ADMIN_PASSWORD = "wuid98741@WRG"; 
 let isAdminAuthenticated = false;
 
 // 4 款蘭花商品
@@ -111,7 +111,6 @@ function switchTab(tab) {
   if (tab === 'track') searchOrders();
 }
 
-// 買家資訊對話框
 function openInfoModal() {
   document.getElementById("info-modal").classList.remove("hidden");
 }
@@ -120,7 +119,7 @@ function closeInfoModal() {
   document.getElementById("info-modal").classList.add("hidden");
 }
 
-// 賣家後台登入
+// 賣家後台登入驗證
 function verifyAdminPassword() {
   const inputPass = document.getElementById("admin-pass-input").value;
   if (inputPass === ADMIN_PASSWORD) {
@@ -133,7 +132,7 @@ function verifyAdminPassword() {
 }
 
 function adminLogout() {
-  window.location.href = "shop.html";
+  window.location.href = "index.html";
 }
 
 function renderProducts() {
@@ -446,7 +445,6 @@ function getStatusBadge(status) {
   }
 }
 
-// 賣家新增案件 (含訃聞圖檔)
 function handleAddCase(e) {
   e.preventDefault();
   const date = document.getElementById("admin-case-date").value;
