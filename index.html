@@ -29,7 +29,7 @@
       </div>
 
       <div class="flex items-center gap-3">
-        <a href="shop.html" target="_blank" class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-600 px-3 py-1.5 rounded-lg text-slate-300 transition">
+        <a href="index.html" target="_blank" class="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-600 px-3 py-1.5 rounded-lg text-slate-300 transition">
           <i class="fa-solid fa-external-link mr-1"></i> 開啟買家前台
         </a>
         <button onclick="adminLogout()" class="bg-rose-950/80 hover:bg-rose-900 border border-rose-700/60 text-rose-200 px-3 py-1.5 rounded-lg text-xs font-medium transition">
@@ -99,7 +99,7 @@
 
   </main>
 
-  <!-- Modal: Admin Auth Lock -->
+  <!-- Modal: Admin Auth Lock (Password hidden as type="password") -->
   <div id="auth-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
     <div class="bg-slate-800 border border-amber-600/40 rounded-2xl p-6 max-w-sm w-full space-y-5 shadow-2xl text-center">
       <div class="w-12 h-12 rounded-full bg-amber-950 border border-amber-500/50 text-amber-400 flex items-center justify-center mx-auto text-xl">
@@ -110,7 +110,7 @@
         <p class="text-xs text-slate-400 mt-1">此區僅限龍園工作人員存取，請輸入管理密碼</p>
       </div>
       <div>
-        <input type="password" id="admin-pass-input" placeholder="請輸入商家密碼 (預設: 8888)"
+        <input type="password" id="admin-pass-input" placeholder="請輸入商家後台密碼"
           class="w-full text-center py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-amber-500">
       </div>
       <div class="flex gap-3">
