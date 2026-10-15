@@ -95,9 +95,7 @@ function switchTab(tab) {
   document.querySelectorAll(".nav-btn").forEach(el => el.classList.remove("active"));
 
   document.getElementById(`view-${tab}`).classList.remove("hidden");
-  if (document.getElementById(`nav-${tab}`)) {
-    document.getElementById(`nav-${tab}`).classList.add("active");
-  }
+  document.getElementById(`nav-${tab}`).classList.add("active");
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -112,6 +110,7 @@ function closeInfoModal() {
   document.getElementById("info-modal").classList.add("hidden");
 }
 
+// 商家登入驗證相關
 function openAuthModal() {
   if (isAdminAuthenticated) {
     switchTab('admin');
