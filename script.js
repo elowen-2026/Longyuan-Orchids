@@ -1,9 +1,7 @@
-// 【安全性升級】這裡儲存的是密碼 "wuid98741@WRG" 的 SHA-256 雜湊碼
-// 即使公開在 GitHub 上，別人也無法從這串亂碼猜出您的明文密碼
+// 【商家後台密碼的 SHA-256 雜湊碼】(對應明文: wuid98741@WRG)
 const ADMIN_PASSWORD_HASH = "b107c123386348324e0b24045f061f22495393086eb293776a9202f5a09b3074"; 
 let isAdminAuthenticated = false;
 
-// 4 款蘭花商品
 const PRODUCTS = [
   {
     id: "p1",
@@ -74,17 +72,9 @@ document.addEventListener("DOMContentLoaded", () => {
   if (yrEl) yrEl.textContent = new Date().getFullYear();
 
   loadData();
-
-  if (document.getElementById("product-list")) {
-    renderProducts();
-    populateDropdowns();
-    selectProduct("p1");
-  }
-
-  if (document.getElementById("admin-cases-list")) {
-    renderAdminCases();
-    renderAdminOrders();
-  }
+  renderProducts();
+  populateDropdowns();
+  selectProduct("p1");
 });
 
 function loadData() {
@@ -120,7 +110,20 @@ function closeInfoModal() {
   document.getElementById("info-modal").classList.add("hidden");
 }
 
-// 輔助函式：將輸入的密碼轉成 SHA-256 雜湊值
+// 商家登入驗證相關
+function openAuthModal() {
+  if (isAdminAuthenticated) {
+    switchTab('admin');
+  } else {
+    document.getElementById("admin-pass-input").value = "";
+    document.getElementById("auth-modal").classList.remove("hidden");
+  }
+}
+
+function closeAuthModal() {
+  document.getElementById("auth-modal").classList.add("hidden");
+}
+
 async function sha256(message) {
   const msgBuffer = new TextEncoder().encode(message);
   const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
@@ -129,14 +132,16 @@ async function sha256(message) {
   return hashHex;
 }
 
-// 賣家後台登入驗證（採用加密安全比對）
 async function verifyAdminPassword() {
   const inputPass = document.getElementById("admin-pass-input").value;
   const inputHash = await sha256(inputPass);
 
   if (inputHash === ADMIN_PASSWORD_HASH) {
     isAdminAuthenticated = true;
-    document.getElementById("auth-modal").classList.add("hidden");
+    closeAuthModal();
+    switchTab('admin');
+    renderAdminCases();
+    renderAdminOrders();
     showToast("成功登入商家後台");
   } else {
     alert("密碼錯誤，無法存取商家後台！");
@@ -144,7 +149,9 @@ async function verifyAdminPassword() {
 }
 
 function adminLogout() {
-  window.location.href = "index.html";
+  isAdminAuthenticated = false;
+  switchTab('shop');
+  showToast("已安全登出商家後台");
 }
 
 function renderProducts() {
@@ -480,6 +487,7 @@ function handleAddCase(e) {
     document.getElementById("admin-case-deceased").value = "";
     if (obitFileInput) obitFileInput.value = "";
 
+    populateDropdowns();
     renderAdminCases();
     showToast("成功新增案件至前台選單！");
   };
@@ -499,6 +507,7 @@ function deleteCase(id) {
   if (confirm("確定要刪除此案件紀錄嗎？")) {
     appCases = appCases.filter(c => c.id !== id);
     saveData();
+    populateDropdowns();
     renderAdminCases();
     showToast("已刪除該案件");
   }
@@ -641,7 +650,6 @@ function submitSetupPhoto() {
 function showToast(msg) {
   const toast = document.getElementById("toast");
   document.getElementById("toast-message").innerText = msg;
-  toast.classList.add("opacity-100");
   toast.classList.remove("hidden");
   setTimeout(() => {
     toast.classList.add("hidden");
