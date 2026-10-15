@@ -706,7 +706,14 @@
         return;
       }
 
-      container.innerHTML = list.map(o => `
+      container.innerHTML = list.map(o => {
+        // 狀態 Badge 顏色與明確階段顯示
+        let statusBadgeClass = "bg-amber-950 text-amber-300 border-amber-600/40";
+        if (o.status === "花籃製作中") statusBadgeClass = "bg-blue-950 text-blue-300 border-blue-600/40";
+        if (o.status === "已送達並佈置完成") statusBadgeClass = "bg-emerald-950 text-emerald-300 border-emerald-600/40";
+        if (o.status === "已被管理者取消/刪除") statusBadgeClass = "bg-rose-950 text-rose-300 border-rose-600/40";
+
+        return `
         <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6 space-y-6 shadow-xl">
           <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700 pb-4">
             <div>
@@ -714,7 +721,9 @@
               <span class="font-serif font-bold text-lg text-white">${o.productName}</span>
             </div>
             <div class="flex items-center gap-3">
-              <span class="px-3 py-1 bg-amber-950 text-amber-300 border border-amber-600/40 rounded-full text-xs font-semibold">${o.status}</span>
+              <span class="px-3.5 py-1.5 border rounded-full text-xs font-bold ${statusBadgeClass}">
+                目前階段：${o.status}
+              </span>
               <span class="text-amber-400 font-bold">NT$ ${o.productPrice.toLocaleString()}</span>
             </div>
           </div>
@@ -804,7 +813,8 @@
 
           <div class="text-right text-xs text-slate-300 pt-2">訂購時間：${o.createdAt}</div>
         </div>
-      `).join("");
+      `;
+      }).join("");
     }
 
     function uploadPaymentScreenshot(e, id) {
@@ -905,11 +915,17 @@
               <p class="text-xs text-slate-300">亡者：${o.deceased} | 出殯：${o.date}</p>
               <p class="text-xs text-slate-300">收據需求：${o.receipt && o.receipt.needed ? '<span class="text-amber-300 font-semibold">需要 ('+o.receipt.title+')</span>' : '不需要'}</p>
             </div>
-            <select onchange="updateOrderStatus('${o.id}', this.value)" class="bg-slate-800 text-xs text-amber-300 border border-slate-600 rounded-lg p-1.5 font-semibold">
-              <option value="已成立訂單" ${o.status==='已成立訂單'?'selected':''}>已成立訂單</option>
-              <option value="花籃製作中" ${o.status==='花籃製作中'?'selected':''}>花籃製作中</option>
-              <option value="已送達並佈置完成" ${o.status==='已送達並佈置完成'?'selected':''}>已送達並佈置完成</option>
-            </select>
+            <div class="flex flex-col items-end gap-2">
+              <select onchange="updateOrderStatus('${o.id}', this.value)" class="bg-slate-800 text-xs text-amber-300 border border-slate-600 rounded-lg p-1.5 font-semibold">
+                <option value="已成立訂單" ${o.status==='已成立訂單'?'selected':''}>已成立訂單</option>
+                <option value="花籃製作中" ${o.status==='花籃製作中'?'selected':''}>花籃製作中</option>
+                <option value="已送達並佈置完成" ${o.status==='已送達並佈置完成'?'selected':''}>已送達並佈置完成</option>
+                <option value="已被管理者取消/刪除" ${o.status==='已被管理者取消/刪除'?'selected':''}>已被管理者取消/刪除</option>
+              </select>
+              <button onclick="deleteOrder('${o.id}')" class="text-xs bg-rose-950 hover:bg-rose-900 text-rose-300 border border-rose-600/50 px-2.5 py-1 rounded-lg transition font-semibold">
+                <i class="fa-solid fa-trash mr-1"></i> 刪除訂單
+              </button>
+            </div>
           </div>
 
           <div class="space-y-1 bg-slate-950 p-2.5 rounded-lg text-xs">
@@ -923,7 +939,7 @@
             ${o.paymentScreenshot ? `<button onclick="openImageModal('${o.paymentScreenshot}')" class="text-amber-400 underline hover:text-amber-300 mr-2">檢視付款截圖</button>` : ''}
           </div>
 
-          <!-- 後台新增：普掛收據憑證上傳 (僅在勾選需要收據時顯示操作) -->
+          <!-- 後台新增：普掛收據憑證上傳 -->
           ${o.receipt && o.receipt.needed ? `
             <div class="pt-2 border-t border-slate-800 space-y-2">
               <div class="flex items-center justify-between gap-2">
@@ -941,7 +957,7 @@
             </div>
           ` : ''}
 
-          <!-- 後台原本的現場佈置照片上傳 -->
+          <!-- 後台現場佈置照片上傳 -->
           <div class="pt-2 border-t border-slate-800 space-y-2">
             <div class="flex items-center justify-between gap-2">
               <span class="text-xs text-slate-300"><i class="fa-solid fa-camera mr-1"></i> 現場佈置照片上傳：</span>
@@ -966,6 +982,19 @@
         order.status = status;
         saveData();
         showToast("已更新訂單狀態");
+      }
+    }
+
+    // 管理者刪除訂單（訂單仍保留於系統中，但狀態改為已被取消/刪除，讓訂購者仍可查詢）
+    function deleteOrder(id) {
+      if (confirm("確定要刪除這筆訂單嗎？刪除後台列表會移除此筆，但訂購者透過訂單查詢時仍可看到狀態為「已被管理者取消/刪除」。")) {
+        const order = appOrders.find(o => o.id === id);
+        if (order) {
+          order.status = "已被管理者取消/刪除";
+          saveData();
+          renderAdminOrders();
+          showToast("已將訂單狀態更新並移出後台列表");
+        }
       }
     }
 
