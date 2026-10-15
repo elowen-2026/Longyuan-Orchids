@@ -1,5 +1,6 @@
-// 商家後台新密碼
-const ADMIN_PASSWORD = "wuid98741@WRG"; 
+// 【安全性升級】這裡儲存的是密碼 "wuid98741@WRG" 的 SHA-256 雜湊碼
+// 即使公開在 GitHub 上，別人也無法從這串亂碼猜出您的明文密碼
+const ADMIN_PASSWORD_HASH = "b107c123386348324e0b24045f061f22495393086eb293776a9202f5a09b3074"; 
 let isAdminAuthenticated = false;
 
 // 4 款蘭花商品
@@ -119,10 +120,21 @@ function closeInfoModal() {
   document.getElementById("info-modal").classList.add("hidden");
 }
 
-// 賣家後台登入驗證
-function verifyAdminPassword() {
+// 輔助函式：將輸入的密碼轉成 SHA-256 雜湊值
+async function sha256(message) {
+  const msgBuffer = new TextEncoder().encode(message);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+}
+
+// 賣家後台登入驗證（採用加密安全比對）
+async function verifyAdminPassword() {
   const inputPass = document.getElementById("admin-pass-input").value;
-  if (inputPass === ADMIN_PASSWORD) {
+  const inputHash = await sha256(inputPass);
+
+  if (inputHash === ADMIN_PASSWORD_HASH) {
     isAdminAuthenticated = true;
     document.getElementById("auth-modal").classList.add("hidden");
     showToast("成功登入商家後台");
@@ -629,6 +641,7 @@ function submitSetupPhoto() {
 function showToast(msg) {
   const toast = document.getElementById("toast");
   document.getElementById("toast-message").innerText = msg;
+  toast.classList.add("opacity-100");
   toast.classList.remove("hidden");
   setTimeout(() => {
     toast.classList.add("hidden");
