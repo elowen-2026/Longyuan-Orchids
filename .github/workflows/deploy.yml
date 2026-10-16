@@ -6,6 +6,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   build-and-deploy:
@@ -14,20 +16,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 這一步會自動將您在 GitHub Secrets 設定的數值，替換到 index.html 對應的佔位符中
-      - name: Inject Secrets into index.html
+      # 這一步會自動把您在 GitHub Secrets 的資料，動態生成一個小設定檔注入網頁中
+      - name: Inject Secrets via JS Config
         run: |
-          sed -i 's/\${{ secrets.ADMIN_PASSWORD }}/${{ secrets.ADMIN_PASSWORD }}/g' index.html
-          sed -i 's/\${{ secrets.BOSS_PHONE }}/${{ secrets.BOSS_PHONE }}/g' index.html
-          sed -i 's/\${{ secrets.BOSS_LINE }}/${{ secrets.BOSS_LINE }}/g' index.html
-          sed -i 's/\${{ secrets.WIFE_PHONE }}/${{ secrets.WIFE_PHONE }}/g' index.html
-          sed -i 's/\${{ secrets.WIFE_LINE }}/${{ secrets.WIFE_LINE }}/g' index.html
-          sed -i 's/\${{ secrets.BANK_NAME }}/${{ secrets.BANK_NAME }}/g' index.html
-          sed -i 's/\${{ secrets.BANK_BRANCH }}/${{ secrets.BANK_BRANCH }}/g' index.html
-          sed -i 's/\${{ secrets.BANK_ACCOUNT_NAME }}/${{ secrets.BANK_ACCOUNT_NAME }}/g' index.html
-          sed -i 's/\${{ secrets.BANK_ACCOUNT_NO }}/${{ secrets.BANK_ACCOUNT_NO }}/g' index.html
+          echo "window.env = {" > env-config.js
+          echo "  ADMIN_PASSWORD: '${{ secrets.ADMIN_PASSWORD }}'," >> env-config.js
+          echo "  BOSS_PHONE: '${{ secrets.BOSS_PHONE }}'," >> env-config.js
+          echo "  BOSS_LINE: '${{ secrets.BOSS_LINE }}'," >> env-config.js
+          echo "  WIFE_PHONE: '${{ secrets.WIFE_PHONE }}'," >> env-config.js
+          echo "  WIFE_LINE: '${{ secrets.WIFE_LINE }}'," >> env-config.js
+          echo "  BANK_NAME: '${{ secrets.BANK_NAME }}'," >> env-config.js
+          echo "  BANK_BRANCH: '${{ secrets.BANK_BRANCH }}'," >> env-config.js
+          echo "  BANK_ACCOUNT_NAME: '${{ secrets.BANK_ACCOUNT_NAME }}'," >> env-config.js
+          echo "  BANK_ACCOUNT_NO: '${{ secrets.BANK_ACCOUNT_NO }}'" >> env-config.js
+          echo "};" >> env-config.js
 
-      # 使用 GitHub 官方內建的 Pages 部署工具
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
