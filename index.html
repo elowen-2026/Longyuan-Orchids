@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>龍園 - 告別式典雅蘭花線上訂購與追蹤</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- 自動注入機密設定檔 -->
+  <script src="env-config.js"></script>
+
+  <style>
+    body { font-family: 'Noto Sans TC', sans-serif; font-size: 17px; }
+    h1, h2, h3, h4, .font-serif { font-family: 'Noto Serif TC', serif; }
+    .text-gradient-gold {
+      background: linear-gradient(135deg, #fef08a 0%, #f59e0b 50%, #d97706 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .nav-btn { color: #cbd5e1; background-color: transparent; font-size: 1.1rem; font-weight: 500; }
+    .nav-btn:hover { color: #f1f5f9; background-color: rgba(30, 41, 59, 0.6); }
+    .nav-btn.active { color: #fbbf24; background-color: rgba(217, 119, 6, 0.15); border: 1px solid rgba(217, 119, 6, 0.3); }
+
+    @media print {
+      body * { visibility: hidden; }
+      #printable-report-modal, #printable-report-modal * { visibility: visible; }
+      #printable-report-modal { position: absolute; left: 0; top: 0; width: 100%; background: white !important; color: black !important; }
+      .no-print { display: none !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col antialiased">
+
+  <!-- Navigation Bar -->
+  <header class="bg-slate-900/90 backdrop-blur-md border-b border-amber-900/30 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('shop')">
+        <div class="w-11 h-11 rounded-full bg-gradient-to-br from-amber-600 to-amber-900 flex items-center justify-center text-amber-100 shadow-md border border-amber-500/30">
+          <i class="fa-solid fa-seedling text-xl"></i>
+        </div>
+        <div>
+          <span class="font-serif text-2xl font-bold tracking-wider text-gradient-gold block leading-none">龍園</span>
+        </div>
+      </div>
+
+      <nav class="flex items-center space-x-2 sm:space-x-4">
+        <button id="nav-shop" onclick="switchTab('shop')" class="nav-btn active px-3.5 py-2 rounded-lg transition flex items-center gap-2">
+          <i class="fa-solid fa-store"></i> <span>蘭花訂購</span>
+        </button>
+        <button id="nav-track" onclick="switchTab('track')" class="nav-btn px-3.5 py-2 rounded-lg transition flex items-center gap-2">
+          <i class="fa-solid fa-magnifying-glass"></i> <span>訂單查詢</span>
+        </button>
+        <button onclick="openQaModal()" class="nav-btn px-3.5 py-2 rounded-lg transition flex items-center gap-2 text-slate-200 hover:text-amber-300">
+          <i class="fa-solid fa-circle-question"></i> <span>Q&A</span>
+        </button>
+        <button onclick="openInfoModal()" class="nav-btn px-3.5 py-2 rounded-lg transition flex items-center gap-2 text-slate-200 hover:text-amber-300">
+          <i class="fa-solid fa-circle-info"></i> <span>商家資訊</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- VIEW 1: SHOPPING & ORDER FORM -->
+    <section id="view-shop" class="space-y-12">
+      <div class="relative rounded-2xl overflow-hidden border border-slate-800 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950 p-8 sm:p-12 text-center shadow-2xl">
+        <div class="relative z-10 max-w-2xl mx-auto space-y-4">
+          <div class="inline-block px-4 py-1.5 rounded-full bg-amber-950/60 border border-amber-600/30 text-amber-300 text-sm font-medium tracking-widest uppercase mb-1">
+            謹悼懷思 ‧ 莊重獻禮
+          </div>
+          <h1 class="font-serif text-3xl sm:text-5xl font-bold text-slate-100 tracking-tight">
+            告別式典雅蘭花花籃
+          </h1>
+          <p class="text-slate-300 text-lg sm:text-xl font-normal leading-relaxed">
+            嚴選高雅蝴蝶蘭，傳遞深切悼念與無盡思念。線上輕鬆訂購，由專人親送到場佈置並拍照上傳至「訂單查詢系統中」。
+          </p>
+        </div>
+      </div>
+
+      <!-- Products Grid -->
+      <div>
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="font-serif text-2xl sm:text-3xl font-bold text-slate-200 flex items-center gap-3">
+            <i class="fa-solid fa-seedling text-amber-500 text-2xl"></i> 蘭花款式選擇
+          </h2>
+          <span class="text-base text-slate-300 font-medium">請選擇一款蘭花商品以進行訂購</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="product-list">
+          <!-- JS 動態載入商品 -->
+        </div>
+      </div>
+
+      <!-- Order Form Section -->
+      <div class="bg-slate-800/90 rounded-2xl border border-slate-700 p-6 sm:p-10 shadow-xl backdrop-blur-sm">
+        <div class="border-b border-slate-700/80 pb-5 mb-8 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="font-serif text-2xl sm:text-3xl font-bold text-amber-400 flex items-center gap-3">
+              <i class="fa-solid fa-file-signature"></i> 填寫訂購人與告別式資料
+            </h2>
+          </div>
+          <div id="selected-product-badge" class="bg-amber-950/90 border border-amber-600/50 text-amber-200 px-5 py-2.5 rounded-xl text-lg font-semibold shadow">
+            <span>已選擇：<strong id="selected-product-name" class="text-white">請先選擇商品</strong></span>
+          </div>
+        </div>
+
+        <form id="order-form" onsubmit="handleOrderSubmit(event)" class="space-y-8">
+          <input type="hidden" id="form-product-id" required>
+
+          <div class="bg-slate-900/70 p-6 sm:p-8 rounded-2xl border border-slate-700 space-y-6">
+            <h3 class="font-serif text-xl sm:text-2xl font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+              <i class="fa-solid fa-user-pen"></i> 一、訂購人聯絡資料與收據設定
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-2">
+                <label class="block text-lg font-semibold text-slate-200">訂購人姓名 <span class="text-rose-500">*</span></label>
+                <input type="text" id="cust-name" required placeholder="請輸入姓名" class="w-full px-4 py-3.5 bg-slate-900 border border-slate-600 rounded-xl text-slate-100 text-lg focus:outline-none focus:border-amber-500">
+              </div>
+              <div class="space-y-2">
+                <label class="block text-lg font-semibold text-slate-200">電話 <span class="text-rose-500">*</span></label>
+                <input type="tel" id="cust-phone" required placeholder="例如：0912345678" class="w-full px-4 py-3.5 bg-slate-900 border border-slate-600 rounded-xl text-slate-100 text-lg focus:outline-none focus:border-amber-500">
+              </div>
+              <div class="space-y-2">
+                <label class="block text-lg font-semibold text-slate-200">訂購人地址 <span class="text-rose-500">*</span></label>
+                <input type="text" id="cust-address" required placeholder="請輸入完整地址" class="w-full px-4 py-3.5 bg-slate-900 border border-slate-600 rounded-xl text-slate-100 text-lg focus:outline-none focus:border-amber-500">
+              </div>
+              <div class="space-y-2">
+                <label class="block text-lg font-semibold text-slate-200">電子信箱 <span class="text-slate-400 text-base font-normal">(選填)</span></label>
+                <input type="email" id="cust-email" placeholder="name@example.com (選填)" class="w-full px-4 py-3.5 bg-slate-900 border border-slate-600 rounded-xl text-slate-100 text-lg focus:outline-none focus:border-amber-500">
+              </div>
+              <div class="space-y-2 md:col-span-2">
+                <label class="block text-lg font-semibold text-slate-200">LINE ID(需照片額外發送時填寫) <span class="text-slate-400 text-base font-normal">(選填)</span></label>
+                <input type="text" id="cust-line-id" placeholder="請輸入 LINE ID (選填)" class="w-full px-4 py-3.5 bg-slate-900 border border-slate-600 rounded-xl text-slate-100 text-lg focus:outline-none focus:border-amber-500">
+              </div>
+            </div>
+
+            <div class="border-t border-slate-800 pt-5 space-y-4">
+              <div class="flex items-center space-x-3">
+                <input type="checkbox" id="need-receipt" onchange="toggleReceiptFields()" class="w-6 h-6 accent-amber-600 rounded cursor-pointer">
+                <label for="need-receipt" class="text-lg font-semibold text-slate-200 cursor-pointer">需要開立免用發票收據</label>
+              </div>
+              <div id="receipt-fields" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 bg-slate-950 p-5 rounded-xl border border-slate-700">
+                <div class="space-y-2">
+                  <label class="block text-base font-semibold text-slate-300">收據抬頭 (個人或公司)</label>
+                  <input type="text" id="receipt-title" placeholder="請輸入買受人抬頭" class="w-full px-4 py-3 bg-slate-900 border border-slate-600 rounded-lg text-slate-100 text-base focus:outline-none focus:border-amber-500">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-slate-900/70 p-6 sm:p-8 rounded-2xl border border-slate-700 space-y-6">
+            <h3 class="font-serif text-xl sm:text-2xl font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+              <i class="fa-solid fa-calendar-days"></i> 二、告別式與亡者資訊
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div class="space-y-2">
+                <label class="block text-lg font-semibold text-slate-200">出殯日期 <span class="text-rose-500">*</span></label>
+                <select id="select-date-option" required onchange="handleCaseSelection('date')" class="w-full px-4 py-3.5 bg-slate-900 border border-slate-600 rounded-xl text-slate-100 text-lg focus:outline-none focus:border-amber-500"></select>
+              </div>
+              <div class="space-y-2">
+                <label class="block text-lg font-semibold text-slate-200">亡者姓名 <span class="text-rose-500">*</span></label>
+                <select id="select-deceased-option" required onchange="handleCaseSelection('deceased')" class="w-full px-4 py-3.5 bg-slate-900 border border-slate-600 rounded-xl text-slate-100 text-lg focus:outline-none focus:border-amber-500"></select>
+              </div>
+              <div class="space-y-2">
+                <label class="block text-lg font-semibold text-slate-200">出殯地點</label>
+                <input type="text" id="cust-location-display" readonly placeholder="由系統自動帶入地點" class="w-full px-4 py-3.5 bg-slate-950 border border-slate-700 text-amber-300 font-bold rounded-xl text-lg cursor-not-allowed">
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-slate-900/70 p-6 sm:p-8 rounded-2xl border border-slate-700 space-y-6">
+            <h3 class="font-serif text-xl sm:text-2xl font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+              <i class="fa-solid fa-ribbon"></i> 三、蘭花卡片（輓詞與落款）設定
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-2">
+                <label class="block text-lg font-semibold text-slate-200">
+                  落款 署名 <span class="text-rose-500">*</span>
+                </label>
+                <input type="text" id="card-signature" required placeholder="例如：好友 王大明 敬挽 / 某某公司 全體同仁 敬悼" class="w-full px-4 py-3.5 bg-slate-900 border border-slate-600 rounded-xl text-slate-100 text-lg focus:outline-none focus:border-amber-500">
+                <p class="text-sm text-slate-300">卡片署名將顯示於花籃卡片右下方</p>
+              </div>
+
+              <div class="space-y-2">
+                <label class="block text-lg font-semibold text-slate-200">
+                  卡片 輓詞選擇 <span class="text-rose-500">*</span>
+                </label>
+                <select id="card-couplet-option" onchange="handleCoupletSelection()" class="w-full px-4 py-3.5 bg-slate-900 border border-slate-600 rounded-xl text-slate-100 text-lg focus:outline-none focus:border-amber-500">
+                  <option value="系統幫您直接安排">1. 系統幫您直接安排</option>
+                  <option value="音容宛在">2. 音容宛在</option>
+                  <option value="德澤長存">3. 德澤長存</option>
+                  <option value="永懷風範">4. 永懷風範</option>
+                  <option value="功在桑梓">5. 功在桑梓</option>
+                  <option value="駕返瑤池">6. 駕返瑤池</option>
+                  <option value="CUSTOM">7. 請訂購者自行輸入</option>
+                </select>
+                <div id="custom-couplet-container" class="hidden mt-3">
+                  <input type="text" id="card-couplet-custom" placeholder="請輸入自訂輓詞" class="w-full px-4 py-3.5 bg-slate-900 border border-slate-600 rounded-xl text-slate-100 text-lg">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-slate-900/70 p-6 sm:p-8 rounded-2xl border border-slate-700 space-y-6">
+            <h3 class="font-serif text-xl sm:text-2xl font-bold text-amber-400 flex items-center gap-2 border-b border-slate-800 pb-3">
+              <i class="fa-solid fa-image"></i> 四、預覽訃聞圖檔
+            </h3>
+            <div id="obituary-preset-section" class="hidden space-y-3 bg-slate-900 p-5 rounded-xl border border-amber-500/40">
+              <p class="text-base font-bold text-amber-400">商家提供訃聞圖檔</p>
+              <div class="relative h-64 w-full rounded overflow-hidden bg-black cursor-pointer group" onclick="openPresetObituaryModal()">
+                <img id="obituary-preset-img" src="" class="w-full h-full object-contain group-hover:scale-105 transition duration-300">
+                <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-base text-white font-semibold">
+                  <i class="fa-solid fa-magnifying-glass-plus text-xl mr-2"></i> 點擊放大檢視
+                </div>
+              </div>
+            </div>
+            <div id="obituary-empty-notice" class="text-slate-300 text-base py-6 text-center bg-slate-900/50 rounded-xl border border-slate-800">
+              請選擇出殯日期與亡者姓名以檢視訃聞圖檔
+            </div>
+          </div>
+
+          <button type="submit" class="w-full py-5 bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold text-2xl rounded-2xl transition shadow-xl">
+            確認送出訂單
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- VIEW 2: ORDER TRACKING (顯示訂單完成進度) -->
+    <section id="view-track" class="hidden space-y-8">
+      <div class="max-w-4xl mx-auto text-center space-y-6">
+        <h1 class="font-serif text-3xl sm:text-4xl font-bold text-amber-400">訂單進度與佈置照片查詢</h1>
+        <p class="text-slate-300 text-lg">請輸入您當初訂購時的「訂單編號」或「手機號碼」查詢詳細進度與上傳匯款憑證</p>
+        <div class="flex gap-4">
+          <input type="text" id="track-search-input" placeholder="輸入訂單編號或手機號碼" class="flex-1 px-5 py-4 bg-slate-900 border-2 border-slate-600 rounded-2xl text-slate-100 text-lg font-medium focus:outline-none focus:border-amber-500">
+          <button onclick="searchOrders()" class="px-10 py-4 bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold text-lg rounded-2xl transition shadow-lg">查詢</button>
+        </div>
+        <div id="track-results-container" class="space-y-6 text-left pt-4"></div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: ADMIN PORTAL -->
+    <section id="view-admin" class="hidden space-y-8">
+      <div class="flex flex-wrap justify-between items-center border-b border-slate-800 pb-5 gap-4">
+        <h1 class="font-serif text-3xl font-bold text-amber-400"><i class="fa-solid fa-user-shield"></i> 商家後台管理系統</h1>
+        <div class="flex flex-wrap items-center gap-3">
+          <button onclick="generateReportPDF()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-3 rounded-xl text-base font-bold transition flex items-center gap-2 shadow">
+            <i class="fa-solid fa-file-pdf text-lg"></i> 導出對帳單 (PDF/列印)
+          </button>
+          <button onclick="clearAllSystemData()" class="bg-rose-700 hover:bg-rose-600 text-white px-5 py-3 rounded-xl text-base font-bold transition flex items-center gap-2 shadow">
+            <i class="fa-solid fa-trash-can text-lg"></i> 一鍵清除所有訂單與案件
+          </button>
+          <button onclick="adminLogout()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-5 py-3 rounded-xl text-base font-bold transition">
+            登出
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="bg-slate-800 p-6 sm:p-8 rounded-3xl border border-slate-700 space-y-6 md:col-span-2 shadow-xl">
+          <h2 class="font-serif text-xl sm:text-2xl font-bold text-amber-300"><i class="fa-solid fa-id-card mr-2"></i> 設定商家聯絡與銀行匯款資訊 (安全加密儲存於瀏覽器)</h2>
+          <form onsubmit="handleSaveShopInfo(event)" class="space-y-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              <div>
+                <label class="block text-sm font-semibold text-slate-200 mb-2">老闆電話</label>
+                <input type="text" id="admin-boss-phone" class="w-full p-3.5 bg-slate-900 text-base border border-slate-600 rounded-xl text-white font-medium">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-slate-200 mb-2">老闆 Line ID</label>
+                <input type="text" id="admin-boss-line" class="w-full p-3.5 bg-slate-900 text-base border border-slate-600 rounded-xl text-white font-medium">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-slate-200 mb-2">老闆娘電話</label>
+                <input type="text" id="admin-wife-phone" class="w-full p-3.5 bg-slate-900 text-base border border-slate-600 rounded-xl text-white font-medium">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-slate-200 mb-2">老闆娘 Line ID</label>
+                <input type="text" id="admin-wife-line" class="w-full p-3.5 bg-slate-900 text-base border border-slate-600 rounded-xl text-white font-medium">
+              </div>
+            </div>
+
+            <div class="border-t border-slate-700 pt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              <div>
+                <label class="block text-sm font-semibold text-slate-200 mb-2">銀行名稱</label>
+                <input type="text" id="admin-bank-name" class="w-full p-3.5 bg-slate-900 text-base border border-slate-600 rounded-xl text-white font-medium">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-slate-200 mb-2">分行名稱</label>
+                <input type="text" id="admin-bank-branch" class="w-full p-3.5 bg-slate-900 text-base border border-slate-600 rounded-xl text-white font-medium">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-slate-200 mb-2">戶名</label>
+                <input type="text" id="admin-bank-account-name" class="w-full p-3.5 bg-slate-900 text-base border border-slate-600 rounded-xl text-white font-medium">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-slate-200 mb-2">帳號</label>
+                <input type="text" id="admin-bank-account-no" class="w-full p-3.5 bg-slate-900 text-base border border-slate-600 rounded-xl text-white font-medium">
+              </div>
+            </div>
+
+            <div>
+              <button type="submit" class="py-3.5 px-8 bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold text-lg rounded-xl transition shadow">儲存商家與匯款資訊</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="bg-slate-800 p-6 sm:p-8 rounded-3xl border border-slate-700 space-y-5 shadow-xl">
+          <h2 class="font-serif text-xl font-bold text-amber-300"><i class="fa-solid fa-calendar-plus mr-2"></i> 新增承接案件 (提示：為確保多裝置同步，請直接修改程式碼中的 DEFAULT_CASES)</h2>
+          <form onsubmit="handleAddCase(event)" class="space-y-4">
+            <input type="date" id="admin-case-date" required class="w-full p-4 bg-slate-900 text-base border border-slate-600 rounded-xl text-white font-medium">
+            <input type="text" id="admin-case-deceased" placeholder="亡者姓名 (例如: 故 劉公太慶 先生)" required class="w-full p-4 bg-slate-900 text-base border border-slate-600 rounded-xl text-white font-medium">
+            <input type="text" id="admin-case-location" placeholder="出殯地點 (例如: 十八號家祭室)" required class="w-full p-4 bg-slate-900 text-base border border-slate-600 rounded-xl text-white font-medium">
+            <input type="file" id="admin-case-obituary" accept="image/*" class="w-full text-base text-slate-300 file:py-2 file:px-4 file:rounded-lg file:bg-slate-700 file:text-white file:border-0 file:cursor-pointer">
+            <button type="submit" class="w-full py-4 bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold text-lg rounded-xl transition shadow">新增案件 (本機)</button>
+          </form>
+          <div id="admin-cases-list" class="space-y-3 mt-4 text-base max-h-72 overflow-y-auto pr-1"></div>
+        </div>
+
+        <div class="bg-slate-800 p-6 sm:p-8 rounded-3xl border border-slate-700 space-y-5 shadow-xl">
+          <div class="flex justify-between items-center">
+            <h2 class="font-serif text-xl font-bold text-amber-300"><i class="fa-solid fa-boxes-packing mr-2"></i> 訂單列表管理</h2>
+            <button onclick="renderAdminOrders()" class="text-base bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-xl text-white font-bold">重新整理</button>
+          </div>
+          <div id="admin-orders-list" class="space-y-5 text-lg max-h-[550px] overflow-y-auto pr-1"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="mt-auto border-t border-slate-800 bg-slate-950 py-8 text-center text-base text-slate-400 space-y-3">
+    <p>© <span id="current-year"></span> 龍園殯儀用品社. All Rights Reserved.</p>
+    <button onclick="openAuthModal()" class="text-slate-300 hover:text-amber-400 transition text-base font-semibold">
+      <i class="fa-solid fa-gear mr-1"></i> 商家登入
+    </button>
+  </footer>
+
+  <div id="date-restriction-modal" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-slate-800 border-2 border-amber-500 rounded-3xl p-8 sm:p-10 max-w-xl w-full text-center space-y-8 shadow-2xl">
+      <div class="w-20 h-20 bg-amber-950/80 border-2 border-amber-500 text-amber-400 rounded-full flex items-center justify-center mx-auto text-4xl shadow-lg">
+        <i class="fa-solid fa-circle-exclamation"></i>
+      </div>
+      <div class="space-y-4">
+        <h3 class="font-serif font-bold text-2xl sm:text-3xl text-amber-400 tracking-wide">系統訂購提醒</h3>
+        <p class="text-xl sm:text-2xl text-slate-100 font-bold leading-relaxed px-2 sm:px-4">因式場佈置關係本系統僅開放到出殯日前兩天，欲訂購請聯繫商家確認 謝謝</p>
+      </div>
+      <div class="pt-2">
+        <button onclick="closeDateRestrictionModal()" class="w-full py-4 bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold text-xl rounded-2xl transition shadow-xl active:scale-95">我知道了</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 系統未配對到正確資料提示視窗 -->
+  <div id="data-mismatch-modal" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-slate-800 border-2 border-amber-500 rounded-3xl p-8 sm:p-10 max-w-xl w-full text-center space-y-8 shadow-2xl">
+      <div class="w-20 h-20 bg-amber-950/80 border-2 border-amber-500 text-amber-400 rounded-full flex items-center justify-center mx-auto text-4xl shadow-lg">
+        <i class="fa-solid fa-circle-exclamation"></i>
+      </div>
+      <div class="space-y-4">
+        <h3 class="font-serif font-bold text-2xl sm:text-3xl text-amber-400 tracking-wide">系統提示</h3>
+        <p class="text-xl sm:text-2xl text-slate-100 font-bold leading-relaxed px-2 sm:px-4">系統未配對到正確資料<br>請重新核對資料是否有誤</p>
+      </div>
+      <div class="pt-2">
+        <button onclick="closeDataMismatchModal()" class="w-full py-4 bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold text-xl rounded-2xl transition shadow-xl active:scale-95">我知道了</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="order-success-modal" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-slate-800 border-2 border-amber-500 rounded-3xl p-8 sm:p-10 max-w-xl w-full text-center space-y-6 shadow-2xl">
+      <div class="w-20 h-20 bg-amber-950/80 border-2 border-amber-500 text-amber-400 rounded-full flex items-center justify-center mx-auto text-4xl shadow-lg">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+      <div class="space-y-3">
+        <h3 class="font-serif font-bold text-2xl sm:text-3xl text-amber-400 tracking-wide">訂單已成功送出！</h3>
+        <p id="modal-order-id-display" class="text-lg text-slate-200 font-mono font-bold"></p>
+      </div>
+      <div id="modal-bank-info-content" class="bg-slate-900/90 border border-amber-500/40 p-6 rounded-2xl text-left space-y-3 text-lg text-slate-100"></div>
+      <div class="pt-2">
+        <button onclick="closeOrderSuccessModal()" class="w-full py-4 bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold text-xl rounded-2xl transition shadow-xl active:scale-95">前往查看訂單與上傳匯款憑證</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="printable-report-modal" class="fixed inset-0 z-50 hidden bg-black/90 flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white text-slate-900 rounded-2xl p-6 sm:p-10 max-w-5xl w-full space-y-6 shadow-2xl relative my-8 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-slate-300 pb-4 no-print">
+        <h3 class="font-serif font-bold text-2xl text-slate-800"><i class="fa-solid fa-print mr-2"></i> 佈置花店分流對帳單 (依花店與亡者分類)</h3>
+        <div class="flex gap-3">
+          <button onclick="window.print()" class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-base font-bold rounded-xl transition shadow"><i class="fa-solid fa-file-pdf mr-1"></i> 匯出 / 列印 PDF</button>
+          <button onclick="closeReportModal()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-800 text-base font-bold rounded-xl transition">關閉</button>
+        </div>
+      </div>
+      <div id="report-content" class="space-y-8 text-base"></div>
+    </div>
+  </div>
+
+  <div id="qa-modal" class="fixed inset-0 z-50 hidden bg-black/85 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-800 border border-amber-600/50 rounded-3xl p-6 sm:p-10 max-w-2xl w-full space-y-6 shadow-2xl relative text-slate-200 max-h-[95vh] overflow-y-auto">
+      <button onclick="closeQaModal()" class="absolute top-5 right-5 text-slate-300 hover:text-white text-2xl"><i class="fa-solid fa-xmark"></i></button>
+      <div class="flex items-center gap-4 border-b border-slate-700 pb-5">
+        <div class="w-14 h-14 rounded-full bg-amber-950 border border-amber-500/50 text-amber-400 flex items-center justify-center text-2xl font-bold"><i class="fa-solid fa-circle-question"></i></div>
+        <div>
+          <h3 class="font-serif font-bold text-amber-400 text-2xl sm:text-3xl">喪禮高架花籃與輓詞署名 Q&A</h3>
+          <p class="text-sm text-slate-300">獻禮指南與書寫原則解析</p>
+        </div>
+      </div>
+
+      <div class="space-y-5 text-base leading-relaxed text-slate-300">
+        <p>在面對親友離世時，喪禮高架花籃不僅是一份致意，更是一種承載情感與禮俗的表達方式。</p>
+        <p>然而，許多人在準備時，最常遇到的問題就是：「喪禮花籃怎麼寫才得體？」從哀悼詞的選擇、輓詞的使用，到上款、下款與署名方式，每一個細節都關乎禮儀與分寸。</p>
+        <p class="text-amber-300 font-semibold">若用詞不夠恰當，反而可能讓原本真誠的心意失焦。</p>
+        <p>事實上，喪禮花籃的文字並非隨意書寫，而是有其文化脈絡與使用邏輯。不同的對象關係，如親屬、朋友、公司團體；不同的場合形式，如公祭、家祭；甚至不同的宗教背景，都可能影響用詞的選擇。因此，理解常見花籃文字的結構、適用情境與書寫原則，是寫出得體花籃的關鍵。</p>
+
+        <div class="bg-slate-900/90 p-5 rounded-xl border border-slate-700 space-y-4">
+          <h4 class="font-serif font-bold text-amber-400 text-lg border-b border-slate-800 pb-2">一、喪禮高架花籃 完整解析</h4>
+          
+          <div class="space-y-2">
+            <p class="font-bold text-slate-100 text-base">1. 輓詞（哀悼詞）：中間（卡片主體）</p>
+            <p class="text-sm text-slate-300">為卡片核心內容，多為四字輓詞，表達追思與敬意。</p>
+            <p class="text-sm font-bold text-amber-300 mt-1">常見用語：</p>
+            <ul class="list-disc list-inside text-sm space-y-1.5 pl-2 text-slate-200">
+              <li>音容宛在</li>
+              <li>德澤長存</li>
+              <li>永懷風範</li>
+              <li>功在桑梓</li>
+              <li>駕返瑤池（多用於女性）</li>
+            </ul>
+            <p class="text-sm text-slate-300 mt-2"><strong>注意：</strong></p>
+            <ul class="list-disc list-inside text-sm space-y-1 pl-2 text-slate-300">
+              <li>建議使用四字成語或典雅詞句，較符合喪禮花籃卡片格式。</li>
+              <li>避免使用過於白話或情緒化的文字，例如「沉痛哀悼」「一路好走」等。</li>
+            </ul>
+          </div>
+
+          <div class="space-y-2 pt-3 border-t border-slate-800">
+            <p class="font-bold text-slate-100 text-base">2. 署名（送花者＋敬詞）：卡片左側或最下方</p>
+            <p class="text-sm text-slate-300">標示送禮者，並搭配致意用語。</p>
+            <p class="text-sm font-bold text-amber-300 mt-1">● 一般寫法：</p>
+            <div class="bg-slate-950 p-3 rounded-lg font-mono text-sm text-slate-200 space-y-1.5 border border-slate-800">
+              <div>王小明 敬輓</div>
+              <div>○○公司 全體同仁 敬輓</div>
+              <div>○○股份有限公司 敬悼</div>
+            </div>
+            <p class="text-sm text-slate-300 mt-2"><strong>注意：</strong></p>
+            <ul class="list-disc list-inside text-sm space-y-1 pl-2 text-slate-300">
+              <li>個人致贈可使用正式姓名，避免暱稱或簡稱。</li>
+              <li>公司或團體致贈，建議使用完整正式名稱。</li>
+              <li>「敬輓」為較常見且通用的寫法；「敬悼」語氣較內斂，也可依場合使用。</li>
+              <li>若不確定如何書寫，可採「正式姓名／完整單位名稱＋敬輓」作為較安全的格式。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <button onclick="closeQaModal()" class="w-full py-4 bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold rounded-xl text-lg transition">關閉 Q&A 說明</button>
+    </div>
+  </div>
+
+  <div id="info-modal" class="fixed inset-0 z-50 hidden bg-black/85 flex items-center justify-center p-4">
+    <div class="bg-slate-800 border border-amber-600/50 rounded-3xl p-6 sm:p-10 max-w-xl w-full space-y-6 shadow-2xl relative text-slate-200 max-h-[95vh] overflow-y-auto">
+      <button onclick="closeInfoModal()" class="absolute top-5 right-5 text-slate-300 hover:text-white text-2xl"><i class="fa-solid fa-xmark"></i></button>
+      <h3 class="font-serif font-bold text-amber-400 text-2xl sm:text-3xl border-b border-slate-700 pb-4">龍園殯儀用品社</h3>
+      <div class="space-y-6 text-lg">
+        <p><i class="fa-solid fa-phone text-amber-500 mr-3 text-xl"></i> 電話：<a href="tel:0224650368" class="text-amber-300 font-bold underline">02-24650368</a></p>
+        <p><i class="fa-solid fa-location-dot text-amber-500 mr-3 text-xl"></i> 地址：基隆市信義區東明路10號一樓</p>
+        <div class="bg-slate-900/90 p-5 rounded-2xl border border-slate-700 space-y-4">
+          <p class="text-amber-400 font-bold flex items-center gap-3 border-b border-slate-800 pb-3 text-xl"><i class="fa-brands fa-line text-2xl text-emerald-400"></i> LINE 專人諮詢聯絡</p>
+          <div id="dynamic-shop-contacts" class="space-y-3 text-base"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="auth-modal" class="fixed inset-0 z-50 hidden bg-black/90 flex items-center justify-center p-4">
+    <div class="bg-slate-800 border border-amber-600/40 rounded-3xl p-8 max-w-md w-full space-y-6 text-center shadow-2xl">
+      <h3 class="font-serif font-bold text-slate-100 text-2xl">商家後台密碼驗證</h3>
+      <input type="password" id="admin-pass-input" placeholder="請輸入商家後台密碼" class="w-full text-center py-4 bg-slate-900 border-2 border-slate-600 rounded-2xl text-slate-100 text-lg font-medium focus:outline-none focus:border-amber-500">
+      <div class="flex gap-4">
+        <button onclick="closeAuthModal()" class="flex-1 py-4 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-2xl text-base font-bold transition">取消</button>
+        <button onclick="verifyAdminPassword()" class="flex-1 py-4 bg-amber-600 hover:bg-amber-500 font-bold text-slate-950 rounded-2xl text-base transition shadow">登入</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="image-modal" class="fixed inset-0 z-50 hidden bg-black/90 flex items-center justify-center p-4" onclick="closeImageModal()">
+    <button class="absolute top-5 right-5 text-white text-4xl"><i class="fa-solid fa-xmark"></i></button>
+    <img id="modal-img" src="" class="max-w-full max-h-[85vh] object-contain rounded-2xl shadow-2xl">
+  </div>
+
+  <div id="toast" class="fixed bottom-6 right-6 z-50 hidden bg-slate-800 border border-amber-500/50 px-6 py-4 rounded-2xl text-base text-amber-200 shadow-2xl font-bold">
+    <span id="toast-message"></span>
+  </div>
+
+  <script>
+    // 從自動生成的環境變數讀取機密資訊（若在本地端沒帶入則使用預設備用值）
+    const ADMIN_PASSWORD = window.env?.ADMIN_PASSWORD || "wuid98741@WRG";
+    let isAdminAuthenticated = false;
+
+    const PRODUCTS = [
+      { id: "p1", name: "租用 粉色蘭花(每對)", price: 1200, desc: "雙株特級粉花大蝴蝶蘭，象徵聖潔純真與深沉敬意。", img: "1.jpg" },
+      { id: "p2", name: "租用 白色蘭花(每對)", price: 1000, desc: "精選白色蝴蝶蘭，花型典雅端莊，表達無盡懷念。", img: "2.jpg" },
+      { id: "p3", name: "高架花籃(每對)", price: 1500, desc: "高貴花卉組合，氣場尊榮肅穆，致敬德高望重者。", img: "3.jpg" },
+      { id: "p4", name: "羅馬柱鮮花籃(每對)", price: 2500, desc: "多株豪華鮮花與羅馬柱設計，大方氣派，展現至高無上的追思。", img: "4.jpg" },
+      { id: "p5", name: "蘭花(每對)", price: 4500, desc: "豪華典雅高階蘭花組合，花禮莊重高雅，傳遞無盡思念與最深敬意。", img: "5.jpg" },
+      { id: "p6", name: "蘭花(每對)", price: 5000, desc: "尊榮頂級盛大蘭花組合，氣派非凡，致以最高規格的悼念。", img: "6.jpg" }
+    ];
+
+    // 💡 核心設定：所有訪客在不同裝置上看到的案件清單（請直接在此處新增或修改案件）
+    const DEFAULT_CASES = [
+      { date: "2026-10-07", deceased: "故 劉公太慶 先生", location: "十八號家祭室", obituary: "02.png" },
+      { date: "2026-10-08", deceased: "顯妣 陳媽林太夫人", location: "十五號家祭室", obituary: "01.png" },
+
+    ];
+
+    let appCases = [];
+    let appOrders = [];
+    let shopInfo = {
+      bossPhone: window.env?.BOSS_PHONE || "0933769755",
+      bossLine: window.env?.BOSS_LINE || "0933769755",
+      wifePhone: window.env?.WIFE_PHONE || "0937871915",
+      wifeLine: window.env?.WIFE_LINE || "0937871915",
+      bankName: window.env?.BANK_NAME || "彰化銀行",
+      bankBranch: window.env?.BANK_BRANCH || "東基隆分行",
+      bankAccountName: window.env?.BANK_ACCOUNT_NAME || "鄭敏慧",
+      bankAccountNo: window.env?.BANK_ACCOUNT_NO || "41228600600300"
+    };
+
+    let selectedProductId = "p1";
+    let currentPresetObituary = "";
+    let newlyCreatedOrderId = "";
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("current-year").textContent = new Date().getFullYear();
+      loadData();
+      renderProducts();
+      populateDropdowns();
+      renderShopContacts();
+      selectProduct("p1");
+    });
+
+    function loadData() {
+      // 確保每次讀取時，皆以 DEFAULT_CASES 為最新同步標準（或可保留自定義擴充）
+      appCases = [...DEFAULT_CASES];
+
+      const o = localStorage.getItem("ly_orders");
+      if (o) {
+        appOrders = JSON.parse(o).map(ord => ({
+          ...ord,
+          florist: ord.florist || "阿茂",
+          status: ord.status || "接單中"
+        }));
+      }
+
+      const s = localStorage.getItem("ly_shop_info");
+      if (s) {
+        shopInfo = JSON.parse(s);
+      }
+    }
+
+    function saveData() {
+      localStorage.setItem("ly_orders", JSON.stringify(appOrders));
+      localStorage.setItem("ly_shop_info", JSON.stringify(shopInfo));
+    }
+
+    function handleSaveShopInfo(e) {
+      e.preventDefault();
+      shopInfo.bossPhone = document.getElementById("admin-boss-phone").value.trim();
+      shopInfo.bossLine = document.getElementById("admin-boss-line").value.trim();
+      shopInfo.wifePhone = document.getElementById("admin-wife-phone").value.trim();
+      shopInfo.wifeLine = document.getElementById("admin-wife-line").value.trim();
+      shopInfo.bankName = document.getElementById("admin-bank-name").value.trim();
+      shopInfo.bankBranch = document.getElementById("admin-bank-branch").value.trim();
+      shopInfo.bankAccountName = document.getElementById("admin-bank-account-name").value.trim();
+      shopInfo.bankAccountNo = document.getElementById("admin-bank-account-no").value.trim();
+      saveData();
+      renderShopContacts();
+      showToast("商家與匯款資訊已安全更新");
+    }
+
+    function renderShopContacts() {
+      const container = document.getElementById("dynamic-shop-contacts");
+      if (container) {
+        container.innerHTML = `
+          <div class="flex items-center justify-between bg-slate-950 p-4 rounded-xl border border-slate-800">
+            <span class="font-bold text-slate-100 text-lg">老闆 (陳平)</span>
+            <span class="font-mono text-amber-300 font-bold text-lg">Line ID：${shopInfo.bossLine || '未設定'}</span>
+          </div>
+          <div class="flex items-center justify-between bg-slate-950 p-4 rounded-xl border border-slate-800">
+            <span class="font-bold text-slate-100 text-lg">老闆娘 (敏慧)</span>
+            <span class="font-mono text-amber-300 font-bold text-lg">Line ID：${shopInfo.wifeLine || '未設定'}</span>
+          </div>
+        `;
+      }
+
+      const bp = document.getElementById("admin-boss-phone");
+      const bl = document.getElementById("admin-boss-line");
+      const wp = document.getElementById("admin-wife-phone");
+      const wl = document.getElementById("admin-wife-line");
+      const bn = document.getElementById("admin-bank-name");
+      const bb = document.getElementById("admin-bank-branch");
+      const ban = document.getElementById("admin-bank-account-name");
+      const bao = document.getElementById("admin-bank-account-no");
+
+      if (bp) bp.value = shopInfo.bossPhone || "";
+      if (bl) bl.value = shopInfo.bossLine || "";
+      if (wp) wp.value = shopInfo.wifePhone || "";
+      if (wl) wl.value = shopInfo.wifeLine || "";
+      if (bn) bn.value = shopInfo.bankName || "";
+      if (bb) bb.value = shopInfo.bankBranch || "";
+      if (ban) ban.value = shopInfo.bankAccountName || "";
+      if (bao) bao.value = shopInfo.bankAccountNo || "";
+    }
+
+    function clearAllSystemData() {
+      if (confirm("⚠️ 警告：確定要清空後台所有的訂單資料嗎？")) {
+        appOrders = [];
+        localStorage.removeItem("ly_orders");
+        renderAdminOrders();
+        showToast("已成功清空所有訂單資料");
+      }
+    }
+
+    function switchTab(tab) {
+      document.querySelectorAll("main > section").forEach(el => el.classList.add("hidden"));
+      document.querySelectorAll(".nav-btn").forEach(el => el.classList.remove("active"));
+      
+      const target = document.getElementById(`view-${tab}`);
+      if (target) target.classList.remove("hidden");
+      
+      const navBtn = document.getElementById(`nav-${tab}`);
+      if (navBtn) navBtn.classList.add("active");
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (tab === 'track') {
+        searchOrders();
+      }
+    }
+
+    function openInfoModal() { document.getElementById("info-modal").classList.remove("hidden"); }
+    function closeInfoModal() { document.getElementById("info-modal").classList.add("hidden"); }
+    function openQaModal() { document.getElementById("qa-modal").classList.remove("hidden"); }
+    function closeQaModal() { document.getElementById("qa-modal").classList.add("hidden"); }
+
+    function openAuthModal() {
+      if (isAdminAuthenticated) {
+        switchTab('admin');
+      } else {
+        document.getElementById("admin-pass-input").value = "";
+        document.getElementById("auth-modal").classList.remove("hidden");
+      }
+    }
+    function closeAuthModal() { document.getElementById("auth-modal").classList.add("hidden"); }
+
+    function verifyAdminPassword() {
+      const pass = document.getElementById("admin-pass-input").value;
+      if (pass === ADMIN_PASSWORD) {
+        isAdminAuthenticated = true;
+        closeAuthModal();
+        switchTab('admin');
+        renderAdminCases();
+        renderAdminOrders();
+        renderShopContacts();
+        showToast("成功登入後台");
+      } else {
+        alert("密碼錯誤");
+      }
+    }
+
+    function adminLogout() {
+      isAdminAuthenticated = false;
+      switchTab('shop');
+      showToast("已登出後台");
+    }
+
+    function renderProducts() {
+      const container = document.getElementById("product-list");
+      if (!container) return;
+      container.innerHTML = PRODUCTS.map(p => `
+        <div id="product-card-${p.id}"
+          class="product-card bg-slate-800/90 rounded-3xl overflow-hidden border border-slate-700 hover:border-amber-500 transition flex flex-col justify-between shadow-2xl">
+          <div>
+            <div class="h-72 sm:h-80 overflow-hidden bg-slate-950 relative group cursor-pointer" onclick="openImageModal('${p.img}')">
+              <img src="${p.img}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+              <span class="absolute top-4 right-4 bg-slate-950/90 border border-amber-500/40 text-amber-300 font-bold px-4 py-2 rounded-full text-lg shadow-md">NT$ ${p.price.toLocaleString()}</span>
+              <div class="absolute inset-0 bg-slate-950/50 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center text-lg text-white gap-2 font-semibold">
+                <i class="fa-solid fa-magnifying-glass-plus text-2xl"></i> 點擊放大檢視圖片
+              </div>
+            </div>
+            <div class="p-6 space-y-3 cursor-pointer" onclick="selectProduct('${p.id}')">
+              <h3 class="font-serif font-bold text-slate-100 text-2xl">${p.name}</h3>
+              <p class="text-base sm:text-lg text-slate-300 leading-relaxed">${p.desc}</p>
+            </div>
+          </div>
+          <div class="p-6 pt-0">
+            <button type="button" onclick="selectProduct('${p.id}')" id="product-btn-${p.id}"
+              class="w-full py-4 rounded-2xl font-bold text-lg transition border border-slate-600 bg-slate-900 text-slate-200 hover:border-amber-500">
+              選擇此款式
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function selectProduct(id) {
+      selectedProductId = id;
+      document.getElementById("form-product-id").value = id;
+      const prod = PRODUCTS.find(p => p.id === id);
+      if (prod) {
+        document.getElementById("selected-product-name").textContent = `${prod.name} (NT$ ${prod.price.toLocaleString()})`;
+      }
+
+      document.querySelectorAll(".product-card").forEach(card => {
+        card.classList.remove("border-amber-500", "ring-2", "ring-amber-500/50");
+      });
+      const selectedCard = document.getElementById(`product-card-${id}`);
+      if (selectedCard) {
+        selectedCard.classList.add("border-amber-500", "ring-2", "ring-amber-500/50");
+      }
+
+      PRODUCTS.forEach(p => {
+        const btn = document.getElementById(`product-btn-${p.id}`);
+        if (btn) {
+          if (p.id === id) {
+            btn.className = "w-full py-4 rounded-2xl font-bold text-lg transition bg-amber-600 text-slate-950 shadow-md";
+            btn.textContent = "✓ 已選擇";
+          } else {
+            btn.className = "w-full py-4 rounded-2xl font-bold text-lg transition border border-slate-600 bg-slate-900 text-slate-200 hover:border-amber-500";
+            btn.textContent = "選擇此款式";
+          }
+        }
+      });
+    }
+
+    function toggleReceiptFields() {
+      const need = document.getElementById("need-receipt").checked;
+      const fields = document.getElementById("receipt-fields");
+      if (need) {
+        fields.classList.remove("hidden");
+      } else {
+        fields.classList.add("hidden");
+      }
+    }
+
+    function handleCoupletSelection() {
+      const val = document.getElementById("card-couplet-option").value;
+      const customContainer = document.getElementById("custom-couplet-container");
+      if (val === "CUSTOM") {
+        customContainer.classList.remove("hidden");
+      } else {
+        customContainer.classList.add("hidden");
+      }
+    }
+
+    function populateDropdowns() {
+      const dateSelect = document.getElementById("select-date-option");
+      const deceasedSelect = document.getElementById("select-deceased-option");
+      if (!dateSelect || !deceasedSelect) return;
+
+      let dateOpts = `<option value="">請選擇出殯日期</option>`;
+      let decOpts = `<option value="">請選擇亡者姓名</option>`;
+
+      appCases.forEach(c => {
+        dateOpts += `<option value="${c.date}">${c.date}</option>`;
+        decOpts += `<option value="${c.deceased}">${c.deceased}</option>`;
+      });
+
+      dateSelect.innerHTML = dateOpts;
+      deceasedSelect.innerHTML = decOpts;
+
+      handleCaseSelection('date');
+    }
+
+    function handleCaseSelection(type) {
+      syncObituaryPreview();
+    }
+
+    function syncObituaryPreview() {
+      const dVal = document.getElementById("select-date-option").value;
+      const decVal = document.getElementById("select-deceased-option").value;
+      const locationInput = document.getElementById("cust-location-display");
+
+      const found = appCases.find(c => c.date === dVal && c.deceased === decVal);
+      const presetSec = document.getElementById("obituary-preset-section");
+      const emptyNotice = document.getElementById("obituary-empty-notice");
+      const imgEl = document.getElementById("obituary-preset-img");
+
+      if (found) {
+        if (locationInput) locationInput.value = found.location || "未設定地點";
+        
+        if (found.obituary) {
+          currentPresetObituary = found.obituary;
+          imgEl.src = found.obituary;
+          presetSec.classList.remove("hidden");
+          if (emptyNotice) emptyNotice.classList.add("hidden");
+        } else {
+          currentPresetObituary = "";
+          presetSec.classList.add("hidden");
+          if (emptyNotice) emptyNotice.classList.remove("hidden");
+        }
+      } else {
+        if (locationInput) locationInput.value = "";
+        currentPresetObituary = "";
+        presetSec.classList.add("hidden");
+        if (emptyNotice) emptyNotice.classList.remove("hidden");
+      }
+    }
+
+    function openDateRestrictionModal() {
+      document.getElementById("date-restriction-modal").classList.remove("hidden");
+    }
+
+    function closeDateRestrictionModal() {
+      document.getElementById("date-restriction-modal").classList.add("hidden");
+    }
+
+    function openDataMismatchModal() {
+      document.getElementById("data-mismatch-modal").classList.remove("hidden");
+    }
+
+    function closeDataMismatchModal() {
+      document.getElementById("data-mismatch-modal").classList.add("hidden");
+    }
+
+    function handleOrderSubmit(e) {
+      e.preventDefault();
+
+      const dateVal = document.getElementById("select-date-option").value;
+      const decVal = document.getElementById("select-deceased-option").value;
+      const locationVal = document.getElementById("cust-location-display").value;
+
+      if (!dateVal || !decVal) {
+        alert("請選擇完整的出殯日期與亡者姓名");
+        return;
+      }
+
+      const matchedCase = appCases.find(c => c.date === dateVal && c.deceased === decVal);
+      if (!matchedCase) {
+        openDataMismatchModal();
+        return;
+      }
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const funeralDateObj = new Date(dateVal);
+      funeralDateObj.setHours(0, 0, 0, 0);
+
+      const minAllowedDate = new Date(today);
+      minAllowedDate.setDate(today.getDate() + 2);
+
+      if (funeralDateObj < minAllowedDate) {
+        openDateRestrictionModal();
+        return;
+      }
+
+      const prodId = document.getElementById("form-product-id").value;
+      const prod = PRODUCTS.find(p => p.id === prodId) || PRODUCTS[0];
+
+      const name = document.getElementById("cust-name").value.trim();
+      const phone = document.getElementById("cust-phone").value.trim();
+      const address = document.getElementById("cust-address").value.trim();
+      const email = document.getElementById("cust-email").value.trim();
+      const lineId = document.getElementById("cust-line-id").value.trim();
+
+      const needReceipt = document.getElementById("need-receipt").checked;
+      const receiptTitle = needReceipt ? document.getElementById("receipt-title").value.trim() : "";
+
+      const signature = document.getElementById("card-signature").value.trim();
+      let couplet = document.getElementById("card-couplet-option").value;
+      if (couplet === "CUSTOM") {
+        couplet = document.getElementById("card-couplet-custom").value.trim();
+      }
+
+      const obituaryImg = currentPresetObituary || "";
+      const orderId = "LY" + Date.now().toString().slice(-8);
+      newlyCreatedOrderId = orderId;
+
+      const newOrder = {
+        id: orderId,
+        productId: prod.id,
+        productName: prod.name,
+        price: prod.price,
+        customerName: name,
+        phone: phone,
+        address: address,
+        email: email,
+        lineId: lineId,
+        needReceipt: needReceipt,
+        receiptTitle: receiptTitle,
+        funeralDate: dateVal,
+        deceasedName: decVal,
+        funeralLocation: locationVal,
+        signature: signature,
+        couplet: couplet,
+        obituary: obituaryImg,
+        florist: "阿茂",
+        status: "接單中",
+        paymentProof: "",
+        arrangementPhoto: "",
+        receiptSendPhoto: "",
+        createdAt: new Date().toLocaleString()
+      };
+
+      appOrders.unshift(newOrder);
+      saveData();
+
+      document.getElementById("modal-order-id-display").textContent = `訂單編號：${orderId}`;
+      document.getElementById("modal-bank-info-content").innerHTML = `
+        <p class="font-bold text-amber-400 text-xl mb-2">【 匯款資訊 】</p>
+        <p class="text-lg">• 銀行：${shopInfo.bankName}</p>
+        <p class="text-lg">• 分行：${shopInfo.bankBranch}</p>
+        <p class="text-lg">• 戶名：${shopInfo.bankAccountName}</p>
+        <p class="text-lg">• 帳號：<span class="font-mono font-bold text-amber-300 text-xl">${shopInfo.bankAccountNo}</span></p>
+        <p class="text-base text-slate-300 mt-3 pt-2 border-t border-slate-800">匯款完成後，請點擊下方按鈕前往「訂單查詢」頁面上傳匯款憑證，謝謝您！</p>
+      `;
+
+      document.getElementById("order-success-modal").classList.remove("hidden");
+    }
+
+    function closeOrderSuccessModal() {
+      document.getElementById("order-success-modal").classList.add("hidden");
+      document.getElementById("order-form").reset();
+      currentPresetObituary = "";
+      populateDropdowns();
+      switchTab('track');
+      document.getElementById("track-search-input").value = newlyCreatedOrderId;
+      searchOrders();
+    }
+
+    function searchOrders() {
+      const q = document.getElementById("track-search-input").value.trim().toLowerCase();
+      const container = document.getElementById("track-results-container");
+
+      if (!q) {
+        container.innerHTML = `<p class="text-slate-300 text-center py-8 text-lg">請輸入訂單編號或手機號碼進行查詢</p>`;
+        return;
+      }
+
+      const results = appOrders.filter(o => o.id.toLowerCase().includes(q) || o.phone.includes(q));
+
+      if (results.length === 0) {
+        container.innerHTML = `<p class="text-rose-400 text-center py-8 text-lg font-bold">查無相關訂單資料，請確認輸入是否正確。</p>`;
+        return;
+      }
+
+      container.innerHTML = results.map(o => `
+        <div class="bg-slate-800 border-2 border-slate-700 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl">
+          <div class="flex flex-wrap justify-between items-start gap-3 border-b border-slate-700 pb-5">
+            <div>
+              <span class="text-amber-400 font-mono font-bold text-2xl">${o.id}</span>
+              <p class="text-sm text-slate-400 mt-1">成立時間：${o.createdAt}</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="bg-amber-900/60 border border-amber-500 px-4 py-2 rounded-2xl text-amber-300 text-base font-bold flex items-center gap-2">
+                <i class="fa-solid fa-spinner animate-spin"></i> 進度：${o.status || '接單中'}
+              </div>
+              <div class="bg-amber-950 border border-amber-600/50 px-4 py-2 rounded-2xl text-amber-300 text-lg font-bold">
+                NT$ ${o.price.toLocaleString()}
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-slate-900 p-5 rounded-2xl border-2 border-amber-500/40 space-y-2 text-base sm:text-lg">
+            <p class="font-bold text-amber-400 text-xl"><i class="fa-solid fa-file-invoice-dollar mr-2"></i> 專屬匯款資訊：</p>
+            <p class="text-slate-200">• 銀行：${shopInfo.bankName} (${shopInfo.bankBranch})</p>
+            <p class="text-slate-200">• 戶名：${shopInfo.bankAccountName}</p>
+            <p class="text-slate-200">• 帳號：<span class="font-mono font-bold text-amber-300 text-xl">${shopInfo.bankAccountNo}</span></p>
+            <p class="text-sm text-amber-300/90 mt-1 font-semibold">💡 匯款完成後，請於下方「1. 上傳匯款憑證」上傳您的轉帳證明，謝謝！</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-base sm:text-lg text-slate-200">
+            <div><strong class="text-white">商品款式：</strong>${o.productName}</div>
+            <div><strong class="text-white">訂購人：</strong>${o.customerName} (${o.phone})</div>
+            <div><strong class="text-white">LINE ID：</strong>${o.lineId || '未填寫'}</div>
+            <div><strong class="text-white">電子信箱：</strong>${o.email || '未填寫'}</div>
+            <div><strong class="text-white">出殯日期：</strong><span class="text-amber-300 font-bold">${o.funeralDate}</span></div>
+            <div><strong class="text-white">亡者姓名：</strong><span class="text-amber-300 font-bold">${o.deceasedName}</span></div>
+            <div class="sm:col-span-2"><strong class="text-white">出殯地點：</strong><span class="text-amber-300 font-bold">${o.funeralLocation || '無記錄'}</span></div>
+            <div><strong class="text-white">卡片輓詞：</strong>${o.couplet}</div>
+            <div><strong class="text-white">卡片落款：</strong>${o.signature}</div>
+            <div class="sm:col-span-2"><strong class="text-white">收據需求：</strong>${o.needReceipt ? `需要 (抬頭: ${o.receiptTitle || o.customerName})` : '不需要'}</div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 pt-4 border-t border-slate-700">
+            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-700 space-y-3">
+              <p class="text-sm sm:text-base font-bold text-amber-300">1. 上傳匯款憑證</p>
+              ${o.paymentProof ? `
+                <div class="h-40 rounded-xl overflow-hidden cursor-pointer bg-black" onclick="openImageModal('${o.paymentProof}')">
+                  <img src="${o.paymentProof}" class="w-full h-full object-cover">
+                </div>
+                <p class="text-xs text-emerald-400 font-bold">✓ 已成功上傳憑證</p>
+              ` : `
+                <p class="text-sm text-slate-400">尚未上傳付款憑證</p>
+              `}
+              <input type="file" accept="image/*" onchange="uploadCustomerPaymentProof(event, '${o.id}')" class="w-full text-sm text-slate-200 file:mr-2 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-bold file:bg-amber-600 file:text-slate-950 cursor-pointer mt-2">
+            </div>
+
+            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-700 space-y-3">
+              <p class="text-sm sm:text-base font-bold text-amber-300">2. 現場佈置完成照片</p>
+              ${o.arrangementPhoto ? `
+                <div class="h-40 rounded-xl overflow-hidden cursor-pointer bg-black" onclick="openImageModal('${o.arrangementPhoto}')">
+                  <img src="${o.arrangementPhoto}" class="w-full h-full object-cover">
+                </div>
+              ` : `
+                <p class="text-sm text-slate-400">花店尚未上傳佈置照</p>
+              `}
+            </div>
+
+            <div class="bg-slate-900 p-5 rounded-2xl border border-slate-700 space-y-3">
+              <p class="text-sm sm:text-base font-bold text-amber-300">3. 寄出收據(普掛單據)</p>
+              ${o.receiptSendPhoto ? `
+                <div class="h-40 rounded-xl overflow-hidden cursor-pointer bg-black" onclick="openImageModal('${o.receiptSendPhoto}')">
+                  <img src="${o.receiptSendPhoto}" class="w-full h-full object-cover">
+                </div>
+              ` : `
+                <p class="text-sm text-slate-400">尚未上傳收據單據</p>
+              `}
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function uploadCustomerPaymentProof(event, orderId) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const ord = appOrders.find(o => o.id === orderId);
+          if (ord) {
+            ord.paymentProof = e.target.result;
+            saveData();
+            searchOrders();
+            showToast("成功上傳匯款憑證");
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function handleAddCase(e) {
+      e.preventDefault();
+      alert("提示：為確保多裝置同步，請直接修改程式碼中的 DEFAULT_CASES 陣列並重新 push 到 GitHub。");
+    }
+
+    function renderAdminCases() {
+      const container = document.getElementById("admin-cases-list");
+      if (!container) return;
+      container.innerHTML = appCases.map((c, idx) => `
+        <div class="bg-slate-900 p-4 rounded-xl border border-slate-700 flex justify-between items-center text-base">
+          <div>
+            <p class="font-bold text-amber-300 text-lg">${c.date} - ${c.deceased}</p>
+            <p class="text-slate-300 text-sm mt-0.5">地點：${c.location || '未填寫'}</p>
+            ${c.obituary ? `<span class="text-emerald-400 text-xs font-bold">✓ 含訃聞圖檔</span>` : `<span class="text-slate-400 text-xs">無訃聞</span>`}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderAdminOrders() {
+      const container = document.getElementById("admin-orders-list");
+      if (!container) return;
+      if (appOrders.length === 0) {
+        container.innerHTML = `<p class="text-slate-300 text-base p-6 text-center">目前無任何訂單</p>`;
+        return;
+      }
+      container.innerHTML = appOrders.map(o => `
+        <div class="bg-slate-900 p-6 rounded-2xl border border-slate-700 space-y-4">
+          <div class="flex justify-between items-start">
+            <div class="space-y-2">
+              <div class="text-lg flex flex-wrap items-center gap-3">
+                <span><span class="text-amber-400 font-mono font-bold text-xl">${o.id}</span> - <span class="text-white font-bold text-lg">${o.customerName}</span> <span class="text-slate-300 font-semibold">(${o.phone})</span></span>
+              </div>
+              <p class="text-base text-amber-300 font-semibold">LINE ID：${o.lineId || '無'}</p>
+              
+              <div class="flex flex-wrap items-center gap-4 py-1 bg-slate-950 p-3 rounded-xl border border-slate-800">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-bold text-slate-300"><i class="fa-solid fa-store mr-1 text-amber-400"></i> 花店：</span>
+                  <select onchange="updateOrderField('${o.id}', 'florist', this.value)" class="bg-slate-900 border border-amber-500/60 text-amber-300 font-bold px-3 py-1.5 rounded-lg text-sm focus:outline-none">
+                    <option value="阿茂" ${o.florist === '阿茂' ? 'selected' : ''}>阿茂</option>
+                    <option value="AA" ${o.florist === 'AA' ? 'selected' : ''}>AA</option>
+                  </select>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-bold text-slate-300"><i class="fa-solid fa-bars-progress mr-1 text-amber-400"></i> 進度設定：</span>
+                  <select onchange="updateOrderField('${o.id}', 'status', this.value)" class="bg-slate-900 border border-amber-500/60 text-amber-300 font-bold px-3 py-1.5 rounded-lg text-sm focus:outline-none">
+                    <option value="接單中" ${o.status === '接單中' ? 'selected' : ''}>接單中</option>
+                    <option value="待付款" ${o.status === '待付款' ? 'selected' : ''}>待付款</option>
+                    <option value="準備佈置中" ${o.status === '準備佈置中' ? 'selected' : ''}>準備佈置中</option>
+                    <option value="訂單完成" ${o.status === '訂單完成' ? 'selected' : ''}>訂單完成</option>
+                  </select>
+                </div>
+              </div>
+
+              <p class="text-base text-slate-100 font-medium">${o.productName} | <strong class="text-amber-400 font-bold">NT$ ${o.price.toLocaleString()}</strong></p>
+              <p class="text-base text-slate-200">出殯日期：<span class="text-white font-bold">${o.funeralDate}</span> | 亡者：<span class="text-white font-bold">${o.deceasedName}</span> | 地點：<span class="text-amber-300 font-bold">${o.funeralLocation || '無'}</span></p>
+              <p class="text-base text-slate-200">卡片署名：<span class="text-white font-medium">${o.signature}</span> | 輓詞：<span class="text-white font-medium">${o.couplet}</span></p>
+              <p class="text-base text-slate-200">收據需求：${o.needReceipt ? `<span class="text-amber-300 font-bold">需要 (抬頭: ${o.receiptTitle || o.customerName})</span>` : '<span class="text-slate-400">不需要</span>'}</p>
+            </div>
+            <button onclick="deleteOrder('${o.id}')" class="text-rose-400 hover:text-rose-300 text-xl p-2" title="刪除訂單"><i class="fa-solid fa-trash"></i></button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 border-t border-slate-800 text-base">
+            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2">
+              <p class="text-sm font-bold text-amber-300">匯款憑證</p>
+              ${o.paymentProof ? `<img src="${o.paymentProof}" class="w-full h-28 object-cover rounded-lg cursor-pointer hover:opacity-90 transition" onclick="openImageModal('${o.paymentProof}')">` : '<span class="text-sm text-slate-400 block py-3">尚未上傳</span>'}
+            </div>
+            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2">
+              <p class="text-sm font-bold text-amber-300">佈置完成照</p>
+              ${o.arrangementPhoto ? `<img src="${o.arrangementPhoto}" class="w-full h-28 object-cover rounded-lg cursor-pointer hover:opacity-90 transition" onclick="openImageModal('${o.arrangementPhoto}')">` : '<input type="file" accept="image/*" onchange="adminUploadPhoto(event, \''+o.id+'\', \'arrangementPhoto\')" class="w-full text-xs text-slate-200 file:py-1.5 file:px-2 file:rounded file:bg-amber-600 file:text-slate-950 file:font-bold file:border-0 cursor-pointer mt-1">'}
+            </div>
+            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2">
+              <p class="text-sm font-bold text-amber-300">收據單據</p>
+              ${o.receiptSendPhoto ? `<img src="${o.receiptSendPhoto}" class="w-full h-28 object-cover rounded-lg cursor-pointer hover:opacity-90 transition" onclick="openImageModal('${o.receiptSendPhoto}')">` : (o.needReceipt ? '<input type="file" accept="image/*" onchange="adminUploadPhoto(event, \''+o.id+'\', \'receiptSendPhoto\')" class="w-full text-xs text-slate-200 file:py-1.5 file:px-2 file:rounded file:bg-amber-600 file:text-slate-950 file:font-bold file:border-0 cursor-pointer mt-1">' : '<span class="text-sm text-slate-400 block py-3">免收據</span>')}
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updateOrderField(orderId, field, val) {
+      const ord = appOrders.find(o => o.id === orderId);
+      if (ord) {
+        ord[field] = val;
+        saveData();
+        showToast(`已成功更新訂單設定`);
+      }
+    }
+
+    function adminUploadPhoto(event, orderId, fieldName) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const ord = appOrders.find(o => o.id === orderId);
+          if (ord) {
+            ord[fieldName] = e.target.result;
+            saveData();
+            renderAdminOrders();
+            showToast("成功上傳照片");
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function deleteOrder(orderId) {
+      if (confirm("確定要刪除此訂單嗎？")) {
+        appOrders = appOrders.filter(o => o.id !== orderId);
+        saveData();
+        renderAdminOrders();
+        showToast("已刪除訂單");
+      }
+    }
+
+    function generateReportPDF() {
+      const modal = document.getElementById("printable-report-modal");
+      const content = document.getElementById("report-content");
+
+      if (appOrders.length === 0) {
+        alert("目前無任何訂單資料可供導出！");
+        return;
+      }
+
+      const florists = ["阿茂", "AA"];
+      let reportHTML = `
+        <div class="text-center space-y-2 border-b border-slate-300 pb-6">
+          <h1 class="text-3xl font-bold font-serif">龍園殯儀用品社 - 佈置花店分流對帳單</h1>
+          <p class="text-base text-slate-600">列印日期：${new Date().toLocaleString()}</p>
+        </div>
+      `;
+
+      let grandTotal = 0;
+
+      florists.forEach(floristName => {
+        const floristOrders = appOrders.filter(o => (o.florist || "阿茂") === floristName);
+        if (floristOrders.length === 0) return;
+
+        let floristTotal = floristOrders.reduce((sum, o) => sum + o.price, 0);
+        grandTotal += floristTotal;
+
+        reportHTML += `
+          <div class="mt-8 space-y-4 border-2 border-slate-800 p-6 rounded-2xl bg-slate-50">
+            <div class="flex justify-between items-center bg-slate-800 text-white p-4 rounded-xl">
+              <h2 class="text-xl font-bold font-serif"><i class="fa-solid fa-store mr-2"></i> 合作花店：${floristName}</h2>
+              <span class="text-base font-bold">總計金額：NT$ ${floristTotal.toLocaleString()} (${floristOrders.length} 筆訂單)</span>
+            </div>
+        `;
+
+        const deceasedGroups = {};
+        floristOrders.forEach(o => {
+          const decKey = o.deceasedName || "未指定亡者";
+          if (!deceasedGroups[decKey]) deceasedGroups[decKey] = [];
+          deceasedGroups[decKey].push(o);
+        });
+
+        for (const [deceasedName, orders] of Object.entries(deceasedGroups)) {
+          let decTotal = orders.reduce((sum, o) => sum + o.price, 0);
+          reportHTML += `
+            <div class="bg-white p-4 rounded-xl border border-slate-300 space-y-3 shadow-sm">
+              <div class="flex justify-between items-center border-b border-slate-200 pb-2 text-sm font-bold text-slate-700">
+                <span>🕯️ 亡者：${deceasedName} (出殯日期: ${orders[0].funeralDate} | 地點: ${orders[0].funeralLocation || '無'})</span>
+                <span>次總計：NT$ ${decTotal.toLocaleString()}</span>
+              </div>
+              <table class="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr class="border-b border-slate-200 bg-slate-100 text-slate-700">
+                    <th class="p-2.5">訂單編號</th>
+                    <th class="p-2.5">訂購人 / 電話</th>
+                    <th class="p-2.5">商品款式</th>
+                    <th class="p-2.5">金額</th>
+                    <th class="p-2.5">目前進度</th>
+                    <th class="p-2.5">卡片署名 / 輓詞</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${orders.map(o => `
+                    <tr class="border-b border-slate-100">
+                      <td class="p-2.5 font-mono font-bold">${o.id}</td>
+                      <td class="p-2.5">${o.customerName}<br>${o.phone}</td>
+                      <td class="p-2.5">${o.productName}</td>
+                      <td class="p-2.5 font-bold text-amber-700">NT$ ${o.price.toLocaleString()}</td>
+                      <td class="p-2.5 font-bold text-indigo-600">${o.status || '接單中'}</td>
+                      <td class="p-2.5">${o.signature}<br>(${o.couplet})</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          `;
+        }
+
+        reportHTML += `</div>`;
+      });
+
+      reportHTML += `
+        <div class="mt-8 p-6 bg-slate-900 text-white rounded-2xl flex justify-between items-center text-xl font-bold">
+          <span>全部花店總營收彙整</span>
+          <span>總計金額：NT$ ${grandTotal.toLocaleString()} (${appOrders.length} 筆)</span>
+        </div>
+      `;
+
+      content.innerHTML = reportHTML;
+      modal.classList.remove("hidden");
+    }
+
+    function closeReportModal() {
+      document.getElementById("printable-report-modal").classList.add("hidden");
+    }
+
+    function openImageModal(src) {
+      document.getElementById("modal-img").src = src;
+      document.getElementById("image-modal").classList.remove("hidden");
+    }
+    function closeImageModal() {
+      document.getElementById("image-modal").classList.add("hidden");
+    }
+    function openPresetObituaryModal() {
+      if (currentPresetObituary) openImageModal(currentPresetObituary);
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      document.getElementById("toast-message").textContent = msg;
+      toast.classList.remove("hidden");
+      setTimeout(() => {
+        toast.classList.add("hidden");
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
