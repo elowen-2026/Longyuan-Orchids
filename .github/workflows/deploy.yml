@@ -1,0 +1,32 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ] # 如果您的 GitHub 預設分支是 master，請把 main 改成 master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 這一步會自動將您在 GitHub Secrets 設定的數值，替換到 index.html 對應的佔位符中
+      - name: Inject Secrets into index.html
+        run: |
+          sed -i 's/\${{ secrets.ADMIN_PASSWORD }}/${{ secrets.ADMIN_PASSWORD }}/g' index.html
+          sed -i 's/\${{ secrets.BOSS_PHONE }}/${{ secrets.BOSS_PHONE }}/g' index.html
+          sed -i 's/\${{ secrets.BOSS_LINE }}/${{ secrets.BOSS_LINE }}/g' index.html
+          sed -i 's/\${{ secrets.WIFE_PHONE }}/${{ secrets.WIFE_PHONE }}/g' index.html
+          sed -i 's/\${{ secrets.WIFE_LINE }}/${{ secrets.WIFE_LINE }}/g' index.html
+          sed -i 's/\${{ secrets.BANK_NAME }}/${{ secrets.BANK_NAME }}/g' index.html
+          sed -i 's/\${{ secrets.BANK_BRANCH }}/${{ secrets.BANK_BRANCH }}/g' index.html
+          sed -i 's/\${{ secrets.BANK_ACCOUNT_NAME }}/${{ secrets.BANK_ACCOUNT_NAME }}/g' index.html
+          sed -i 's/\${{ secrets.BANK_ACCOUNT_NO }}/${{ secrets.BANK_ACCOUNT_NO }}/g' index.html
+
+      # 自動部署到 GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
